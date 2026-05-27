@@ -1,0 +1,88 @@
+import type { Config } from 'tailwindcss'
+
+export default {
+  content: [
+    './src/components/**/*.{js,vue,ts}',
+    './src/layouts/**/*.vue',
+    './src/pages/**/*.vue',
+    './src/plugins/**/*.{js,ts}',
+    './src/app.vue',
+    './src/error.vue',
+  ],
+  theme: {
+    extend: {
+      colors: {
+        // Deep luxury palette
+        noir: {
+          DEFAULT: '#0a0a0a',
+          50: '#171717',
+          100: '#141414',
+          200: '#121212',
+          300: '#0f0f0f',
+          400: '#0c0c0c',
+          500: '#0a0a0a',
+          600: '#080808',
+          700: '#050505',
+          800: '#030303',
+          900: '#000000',
+        },
+        burgundy: {
+          DEFAULT: '#5d0e16',
+          50: '#fdf2f3',
+          100: '#fce7e9',
+          200: '#f9d2d6',
+          300: '#f4adb4',
+          400: '#ec7f8c',
+          500: '#df5366',
+          600: '#cb3350',
+          700: '#aa2642',
+          800: '#8e223c',
+          900: '#5d0e16',
+          950: '#3d0810',
+        },
+        gold: {
+          DEFAULT: '#ffcb39',
+          50: '#fffbeb',
+          100: '#fff4c6',
+          200: '#ffe888',
+          300: '#ffcb39',
+          400: '#ffbe20',
+          500: '#f99b07',
+          600: '#dd7302',
+          700: '#b75006',
+          800: '#943d0c',
+          900: '#7a330d',
+          950: '#461902',
+        },
+        cream: {
+          DEFAULT: '#e0c8a9',
+          50: '#faf7f2',
+          100: '#f4ede1',
+          200: '#e8d9c2',
+          300: '#e0c8a9',
+          400: '#cba577',
+          500: '#be8d5a',
+          600: '#b1794e',
+          700: '#936142',
+          800: '#77503b',
+          900: '#614332',
+          950: '#342119',
+        },
+      },
+      fontFamily: {
+        title: ['Montserrat', 'sans-serif'],
+        body: ['The Youngest', 'Georgia', 'serif'],
+      },
+      boxShadow: {
+        'luxury': '0 4px 30px rgba(255, 203, 57, 0.1)',
+        'luxury-lg': '0 10px 50px rgba(255, 203, 57, 0.15)',
+        'inner-gold': 'inset 0 0 30px rgba(255, 203, 57, 0.05)',
+      },
+      backgroundImage: {
+        'gradient-luxury': 'linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 50%, #0a0a0a 100%)',
+        'gradient-gold': 'linear-gradient(135deg, #d4af37 0%, #f2d98f 50%, #d4af37 100%)',
+      },
+    },
+  },
+  plugins: [],
+} satisfies Config
