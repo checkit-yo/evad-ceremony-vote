@@ -7,12 +7,11 @@ const props = defineProps<{
 }>()
 
 const emit = defineEmits<{
-  submit: [payload: { slug: string, name: string, description: string, display_order: number }]
+  submit: [payload: { name: string, description: string, display_order: number }]
   cancel: []
 }>()
 
 const form = reactive({
-  slug: '',
   name: '',
   description: '',
   display_order: 0,
@@ -20,21 +19,13 @@ const form = reactive({
 
 watchEffect(() => {
   if (props.category) {
-    form.slug = props.category.slug
     form.name = props.category.name
     form.description = props.category.description
     form.display_order = props.category.display_order
   }
 })
 
-const slugError = ref('')
-
 function onSubmit() {
-  slugError.value = ''
-  if (!/^[a-z0-9-]+$/.test(form.slug)) {
-    slugError.value = 'Lettres minuscules, chiffres et tirets uniquement.'
-    return
-  }
   emit('submit', { ...form })
 }
 </script>
@@ -47,20 +38,15 @@ function onSubmit() {
         v-model="form.name"
         type="text"
         required
+        placeholder="Meilleur Danseur"
         class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-white focus:border-amber-500 focus:outline-none"
       >
-    </div>
-
-    <div>
-      <label class="block text-xs font-medium text-slate-400 uppercase tracking-wider mb-1">Slug (URL)</label>
-      <input
-        v-model="form.slug"
-        type="text"
-        required
-        placeholder="best-dancer"
-        class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-white focus:border-amber-500 focus:outline-none font-mono text-sm"
-      >
-      <p v-if="slugError" class="text-red-400 text-xs mt-1">{{ slugError }}</p>
+      <p v-if="!category" class="text-xs text-slate-500 mt-1">
+        L'URL de la catégorie sera générée automatiquement depuis ce nom.
+      </p>
+      <p v-else-if="category" class="text-xs text-slate-500 mt-1">
+        URL actuelle : <span class="font-mono">/{{ category.slug }}</span>
+      </p>
     </div>
 
     <div>

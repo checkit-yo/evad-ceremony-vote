@@ -39,7 +39,7 @@ function closeModal() {
   editing.value = null
 }
 
-async function onSubmit(payload: { slug: string, name: string, description: string, display_order: number }) {
+async function onSubmit(payload: { name: string, description: string, display_order: number }) {
   submitting.value = true
   try {
     if (editing.value) {

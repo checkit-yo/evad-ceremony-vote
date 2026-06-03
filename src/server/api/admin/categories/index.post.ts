@@ -1,4 +1,5 @@
 import { useSupabaseAdmin } from '~/server/utils/supabase'
+import { slugify } from '~/server/utils/slug'
 
 export default defineEventHandler(async (event) => {
   const body = await readBody<{
@@ -8,18 +9,20 @@ export default defineEventHandler(async (event) => {
     display_order?: number
   }>(event)
 
-  if (!body?.slug || !body?.name) {
-    throw createError({ statusCode: 400, statusMessage: 'Slug et nom requis.' })
+  if (!body?.name) {
+    throw createError({ statusCode: 400, statusMessage: 'Nom requis.' })
   }
-  if (!/^[a-z0-9-]+$/.test(body.slug)) {
-    throw createError({ statusCode: 400, statusMessage: 'Le slug ne peut contenir que des lettres minuscules, chiffres et tirets.' })
+
+  const slug = body.slug ? body.slug : slugify(body.name)
+  if (!slug || !/^[a-z0-9-]+$/.test(slug)) {
+    throw createError({ statusCode: 400, statusMessage: 'Impossible de générer un slug valide depuis ce nom.' })
   }
 
   const supabase = useSupabaseAdmin()
   const { data, error } = await supabase
     .from('categories')
     .insert({
-      slug: body.slug,
+      slug,
       name: body.name,
       description: body.description ?? '',
       display_order: body.display_order ?? 0,
@@ -29,7 +32,7 @@ export default defineEventHandler(async (event) => {
 
   if (error) {
     if (error.code === '23505') {
-      throw createError({ statusCode: 409, statusMessage: 'Ce slug est déjà utilisé.' })
+      throw createError({ statusCode: 409, statusMessage: `Une catégorie avec un nom similaire existe déjà (slug "${slug}").` })
     }
     throw createError({ statusCode: 500, statusMessage: error.message })
   }
