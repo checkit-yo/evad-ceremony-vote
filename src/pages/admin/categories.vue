@@ -121,7 +121,7 @@ async function onDelete(cat: Category) {
       :title="editing ? 'Éditer la catégorie' : 'Nouvelle catégorie'"
       @close="closeModal"
     >
-      <CategoryForm
+      <AdminCategoryForm
         :category="editing"
         :submitting="submitting"
         @submit="onSubmit"

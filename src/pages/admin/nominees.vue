@@ -162,7 +162,7 @@ async function onDelete(n: Nominee) {
       :title="editing ? 'Éditer le nominé' : 'Nouveau nominé'"
       @close="closeModal"
     >
-      <NomineeForm
+      <AdminNomineeForm
         :nominee="editing"
         :categories="categories"
         :default-category-id="filterCategoryId"
