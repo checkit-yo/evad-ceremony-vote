@@ -2,12 +2,29 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Font face for "The Youngest" - placeholder, replace with actual font file */
+/* The Youngest Script — used for grand titles (hero, page H1) */
 @font-face {
-  font-family: 'The Youngest';
-  src: url('/fonts/TheYoungest.woff2') format('woff2'),
-       url('/fonts/TheYoungest.woff') format('woff');
-  font-weight: normal;
+  font-family: 'The Youngest Script';
+  src: url('/fonts/The%20Youngest%20Script-Rg.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* The Youngest Serif — Book (regular) for body text */
+@font-face {
+  font-family: 'The Youngest Serif';
+  src: url('/fonts/The%20Youngest%20Serif-Book.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* The Youngest Serif — Display (heavy) for secondary titles */
+@font-face {
+  font-family: 'The Youngest Serif';
+  src: url('/fonts/The%20Youngest%20Serif-D.ttf') format('truetype');
+  font-weight: 700;
   font-style: normal;
   font-display: swap;
 }

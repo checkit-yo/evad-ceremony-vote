@@ -91,7 +91,7 @@ const isLoading = computed(() => pending.value && !category.value)
         <div class="max-w-3xl">
           <template v-if="!isLoading && category">
             <div class="w-12 h-px bg-gold mb-6 animate-fade-in" />
-            <h1 class="font-title font-light text-2xl sm:text-3xl md:text-4xl text-cream-100 mb-4 animate-fade-in tracking-wide">
+            <h1 class="font-script text-4xl sm:text-5xl md:text-6xl text-cream-100 mb-4 animate-fade-in">
               {{ category.name }}
             </h1>
             <p class="font-body text-cream-500 text-base md:text-lg animate-fade-in stagger-1 leading-relaxed">
@@ -141,7 +141,7 @@ const isLoading = computed(() => pending.value && !category.value)
       <div class="container mx-auto px-4">
         <div class="text-center mb-10">
           <span class="text-gold text-xs tracking-[0.3em] uppercase font-title mb-4 block">Explorer</span>
-          <h2 class="font-title font-light text-xl md:text-2xl text-cream-100 mb-2 tracking-wide">
+          <h2 class="font-script text-3xl md:text-5xl text-cream-100 mb-2">
             Autres Catégories
           </h2>
           <div class="gold-divider" />

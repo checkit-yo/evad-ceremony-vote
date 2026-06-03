@@ -121,7 +121,7 @@ const imageUrl = computed(() => nominee.value?.image_url || '/placeholder-nomine
                   {{ category.name }}
                 </NuxtLink>
 
-                <h1 class="font-title font-light text-2xl md:text-3xl text-cream-100 mb-4 tracking-wide">
+                <h1 class="font-script text-4xl md:text-5xl text-cream-100 mb-4">
                   {{ nominee.name }}
                 </h1>
 

@@ -70,11 +70,11 @@ const howToVoteSteps = [
         <!-- Minimalist logo -->
 
         <h1
-          class="font-title font-light text-4xl sm:text-5xl md:text-7xl lg:text-8xl text-cream-100 mb-4 md:mb-6 animate-slide-up tracking-widest">
+          class="font-script font-normal text-6xl sm:text-7xl md:text-8xl lg:text-9xl text-cream-100 mb-4 md:mb-6 animate-slide-up">
           EVAD
         </h1>
         <h2
-          class="font-title font-light text-xl sm:text-2xl md:text-3xl text-gold mb-6 md:mb-8 animate-slide-up stagger-1 tracking-[0.2em] uppercase">
+          class="font-script font-normal text-3xl sm:text-4xl md:text-5xl text-gold mb-6 md:mb-8 animate-slide-up stagger-1">
           Ceremony
         </h2>
 
@@ -135,7 +135,7 @@ const howToVoteSteps = [
       <div class="container mx-auto px-4">
         <div class="text-center mb-12 md:mb-20">
           <span class="text-gold text-xs tracking-[0.3em] uppercase font-title mb-4 block">Sélection 2026</span>
-          <h2 class="text-2xl md:text-4xl lg:text-5xl font-title font-light text-cream-100 mb-4 tracking-wider">
+          <h2 class="text-4xl md:text-6xl lg:text-7xl font-script text-cream-100 mb-4">
             Les Catégories
           </h2>
           <div class="gold-divider" />
@@ -156,7 +156,7 @@ const howToVoteSteps = [
       <div class="container mx-auto px-4">
         <div class="text-center mb-12 md:mb-20">
           <span class="text-gold text-xs tracking-[0.3em] uppercase font-title mb-4 block">Processus</span>
-          <h2 class="text-2xl md:text-4xl font-title font-light text-cream-100 mb-4 tracking-wider">
+          <h2 class="text-4xl md:text-6xl font-script text-cream-100 mb-4">
             Comment Voter
           </h2>
           <div class="gold-divider mb-4" />

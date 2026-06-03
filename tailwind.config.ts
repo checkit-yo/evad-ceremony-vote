@@ -70,8 +70,9 @@ export default {
         },
       },
       fontFamily: {
+        script: ['"The Youngest Script"', 'Georgia', 'serif'],
         title: ['Montserrat', 'sans-serif'],
-        body: ['The Youngest', 'Georgia', 'serif'],
+        body: ['"The Youngest Serif"', 'Georgia', 'serif'],
       },
       boxShadow: {
         'luxury': '0 4px 30px rgba(255, 203, 57, 0.1)',
