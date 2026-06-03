@@ -1,66 +1,90 @@
-import { otpStore, votes, hasVoted } from '~/data/mock'
+import { useSupabaseAdmin } from '~/server/utils/supabase'
+import { hashOtp, normalizeEmail } from '~/server/utils/otp'
+
+const MAX_ATTEMPTS = 5
 
 export default defineEventHandler(async (event) => {
-  const body = await readBody(event)
-  const { email, code } = body
+  const body = await readBody<{ email?: string, code?: string }>(event)
+  const rawEmail = body?.email
+  const rawCode = body?.code
 
-  // Validate input
-  if (!email || !code) {
-    throw createError({
-      statusCode: 400,
-      message: 'Email et code sont requis.',
-    })
+  if (!rawEmail || !rawCode) {
+    throw createError({ statusCode: 400, statusMessage: 'Email et code sont requis.' })
   }
 
-  // Get stored OTP
-  const storedData = otpStore.get(email)
+  const email = normalizeEmail(rawEmail)
+  const code = rawCode.trim()
+  const supabase = useSupabaseAdmin()
 
-  if (!storedData) {
+  // Récupérer le dernier OTP non consommé non expiré
+  const { data: otpRow, error: otpErr } = await supabase
+    .from('otp_codes')
+    .select('id, email, category_id, nominee_id, code_hash, expires_at, attempts, consumed_at')
+    .eq('email', email)
+    .is('consumed_at', null)
+    .gt('expires_at', new Date().toISOString())
+    .order('created_at', { ascending: false })
+    .limit(1)
+    .maybeSingle()
+  if (otpErr) {
+    throw createError({ statusCode: 500, statusMessage: `Erreur DB (lookup OTP) : ${otpErr.message}` })
+  }
+  if (!otpRow) {
     return {
       success: false,
-      message: 'Aucun code de vérification trouvé. Veuillez recommencer.',
+      message: 'Aucun code de vérification valide trouvé. Veuillez en demander un nouveau.',
     }
   }
 
-  // Check expiration
-  if (new Date() > storedData.expiresAt) {
-    otpStore.delete(email)
+  // Limite tentatives
+  if (otpRow.attempts >= MAX_ATTEMPTS) {
+    await supabase
+      .from('otp_codes')
+      .update({ consumed_at: new Date().toISOString() })
+      .eq('id', otpRow.id)
     return {
       success: false,
-      message: 'Le code a expiré. Veuillez recommencer.',
+      message: 'Trop de tentatives. Veuillez demander un nouveau code.',
     }
   }
 
-  // Verify code
-  if (storedData.code !== code) {
+  // Vérification du code
+  if (hashOtp(code) !== otpRow.code_hash) {
+    await supabase
+      .from('otp_codes')
+      .update({ attempts: otpRow.attempts + 1 })
+      .eq('id', otpRow.id)
+    const remaining = MAX_ATTEMPTS - (otpRow.attempts + 1)
     return {
       success: false,
-      message: 'Code invalide. Veuillez vérifier et réessayer.',
+      message: remaining > 0
+        ? `Code invalide. Il vous reste ${remaining} tentative${remaining > 1 ? 's' : ''}.`
+        : 'Code invalide. Veuillez demander un nouveau code.',
     }
   }
 
-  // Double-check not already voted (race condition prevention)
-  if (hasVoted(email, storedData.categoryId)) {
-    otpStore.delete(email)
-    return {
-      success: false,
-      message: 'Vous avez déjà voté dans cette catégorie.',
-    }
-  }
-
-  // Record the vote
-  votes.push({
-    nomineeId: storedData.nomineeId,
-    categoryId: storedData.categoryId,
-    email,
-    votedAt: new Date(),
+  // Code OK → enregistrer le vote atomiquement via RPC
+  const { error: rpcError } = await supabase.rpc('record_vote', {
+    p_email: email,
+    p_category_id: otpRow.category_id,
+    p_nominee_id: otpRow.nominee_id,
+    p_otp_id: otpRow.id,
   })
-
-  // Clean up OTP
-  otpStore.delete(email)
-
-  // Simulate processing delay
-  await new Promise(resolve => setTimeout(resolve, 500))
+  if (rpcError) {
+    // 23505 = unique_violation → déjà voté
+    if (rpcError.code === '23505' || rpcError.message?.includes('votes_email_category_unique')) {
+      await supabase
+        .from('otp_codes')
+        .update({ consumed_at: new Date().toISOString() })
+        .eq('id', otpRow.id)
+      return {
+        success: false,
+        alreadyVoted: true,
+        message: 'Vous avez déjà voté dans cette catégorie.',
+      }
+    }
+    throw createError({ statusCode: 500, statusMessage: `Erreur DB (record_vote) : ${rpcError.message}` })
+  }
 
   return {
     success: true,

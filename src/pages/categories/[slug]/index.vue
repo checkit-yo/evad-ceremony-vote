@@ -1,14 +1,16 @@
 <script setup lang="ts">
-import { getCategoryBySlug, type Nominee, type Category } from '~/data/mock'
+import type { Nominee } from '~/types'
 
 const route = useRoute()
 const slug = computed(() => route.params.slug as string)
 
-// Simulating async data loading
-const isLoading = ref(true)
-const category = ref<Category | null>(null)
+const { data: category, pending, error } = useCategory(slug)
+const { data: allCategories } = useCategories()
 
-// Shuffle function (Fisher-Yates algorithm)
+if (error.value) {
+  throw createError({ statusCode: 404, statusMessage: 'Catégorie non trouvée' })
+}
+
 function shuffleArray<T>(array: T[]): T[] {
   const shuffled = [...array]
   for (let i = shuffled.length - 1; i > 0; i--) {
@@ -18,47 +20,16 @@ function shuffleArray<T>(array: T[]): T[] {
   return shuffled
 }
 
-// Randomized nominees list
-const shuffledNominees = ref<Nominee[]>([])
-
-// Load category data (with simulated delay for skeleton demo)
-onMounted(async () => {
-  // Simulate API loading time
-  await new Promise(resolve => setTimeout(resolve, 800))
-  
-  const foundCategory = getCategoryBySlug(slug.value)
-  if (!foundCategory) {
-    throw createError({
-      statusCode: 404,
-      statusMessage: 'Catégorie non trouvée',
-    })
-  }
-  
-  category.value = foundCategory
-  shuffledNominees.value = shuffleArray(foundCategory.nominees)
-  isLoading.value = false
+const shuffledNominees = computed<Nominee[]>(() => {
+  const nominees = category.value?.nominees ?? []
+  return shuffleArray(nominees as Nominee[]).map(n => ({ ...n, category_id: category.value!.id }))
 })
 
-// Watch for route changes
-watch(slug, async (newSlug) => {
-  isLoading.value = true
-  await new Promise(resolve => setTimeout(resolve, 500))
-  
-  const foundCategory = getCategoryBySlug(newSlug)
-  if (foundCategory) {
-    category.value = foundCategory
-    shuffledNominees.value = shuffleArray(foundCategory.nominees)
-  }
-  isLoading.value = false
-})
-
-// SEO
 useSeoMeta({
   title: () => category.value ? `${category.value.name} - Evad Ceremony 2026` : 'Chargement...',
   description: () => category.value?.description || '',
 })
 
-// Voting modal state
 const isVoteModalOpen = ref(false)
 const selectedNominee = ref<Nominee | null>(null)
 
@@ -72,10 +43,9 @@ function closeVoteModal() {
   selectedNominee.value = null
 }
 
-function handleVoteSuccess() {
-  // Could show a toast or update UI
-  console.log('Vote successful!')
-}
+function handleVoteSuccess() {}
+
+const isLoading = computed(() => pending.value && !category.value)
 </script>
 
 <template>
@@ -134,7 +104,6 @@ function handleVoteSuccess() {
             </div>
           </template>
           <template v-else>
-            <!-- Loading skeleton -->
             <div class="h-10 w-2/3 bg-cream-400/10 animate-pulse mb-4" />
             <div class="h-5 w-full bg-cream-400/5 animate-pulse mb-2" />
             <div class="h-5 w-4/5 bg-cream-400/5 animate-pulse" />
@@ -147,7 +116,10 @@ function handleVoteSuccess() {
     <section class="py-12 md:py-20 bg-burgundy-950">
       <div class="container mx-auto px-4">
         <template v-if="!isLoading && category">
-          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          <div v-if="shuffledNominees.length === 0" class="text-center py-16 text-cream-500">
+            Aucun nominé pour cette catégorie pour le moment.
+          </div>
+          <div v-else class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             <NomineeCard
               v-for="(nominee, index) in shuffledNominees"
               :key="nominee.id"
@@ -177,7 +149,7 @@ function handleVoteSuccess() {
 
         <div class="flex flex-wrap justify-center gap-3">
           <NuxtLink
-            v-for="cat in $categories.filter(c => c.slug !== slug)"
+            v-for="cat in (allCategories ?? []).filter(c => c.slug !== slug)"
             :key="cat.id"
             :to="`/categories/${cat.slug}`"
             class="px-4 py-2 border border-cream-400/20 hover:border-gold hover:text-gold text-cream-400 font-title text-xs tracking-wider transition-all duration-500"
@@ -198,16 +170,3 @@ function handleVoteSuccess() {
     />
   </div>
 </template>
-
-<script lang="ts">
-import { categories } from '~/data/mock'
-
-// Make categories available in template
-export default {
-  computed: {
-    $categories() {
-      return categories
-    },
-  },
-}
-</script>

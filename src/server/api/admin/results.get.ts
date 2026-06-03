@@ -1,52 +1,97 @@
-import { categories, getVoteCountByCategory, votes } from '~/data/mock'
+import { useSupabaseAdmin } from '~/server/utils/supabase'
 
-export default defineEventHandler(async (event) => {
-  const query = getQuery(event)
-  const { password } = query
+export default defineEventHandler(async () => {
+  const supabase = useSupabaseAdmin()
 
-  // Simple password protection
-  const config = useRuntimeConfig()
-  if (password !== config.adminPassword) {
-    throw createError({
-      statusCode: 401,
-      message: 'Mot de passe incorrect.',
-    })
+  // 1) Compteurs par (catégorie, nominé) via RPC
+  const { data: counts, error: countsErr } = await supabase.rpc('get_vote_counts')
+  if (countsErr) {
+    throw createError({ statusCode: 500, statusMessage: `Erreur DB (counts) : ${countsErr.message}` })
+  }
+  const countMap = new Map<string, Map<string, number>>()
+  for (const row of (counts ?? []) as Array<{ category_id: string, nominee_id: string, vote_count: number }>) {
+    if (!countMap.has(row.category_id)) countMap.set(row.category_id, new Map())
+    countMap.get(row.category_id)!.set(row.nominee_id, Number(row.vote_count))
   }
 
-  // Build results data
-  const results = categories.map((category) => {
-    const voteCounts = getVoteCountByCategory(category.id)
-    const totalVotes = Object.values(voteCounts).reduce((sum, count) => sum + count, 0)
+  // 2) Catégories + nominés
+  const { data: categories, error: catsErr } = await supabase
+    .from('categories')
+    .select('id, slug, name, description, display_order')
+    .order('display_order', { ascending: true })
+  if (catsErr) {
+    throw createError({ statusCode: 500, statusMessage: `Erreur DB (categories) : ${catsErr.message}` })
+  }
 
-    const nomineesWithVotes = category.nominees.map((nominee) => ({
-      id: nominee.id,
-      name: nominee.name,
-      imageUrl: nominee.imageUrl,
-      votes: voteCounts[nominee.id] || 0,
-      percentage: totalVotes > 0 ? ((voteCounts[nominee.id] || 0) / totalVotes * 100).toFixed(1) : '0',
-    })).sort((a, b) => b.votes - a.votes)
+  const { data: nominees, error: nomErr } = await supabase
+    .from('nominees')
+    .select('id, category_id, name, image_url, display_order')
+    .order('display_order', { ascending: true })
+  if (nomErr) {
+    throw createError({ statusCode: 500, statusMessage: `Erreur DB (nominees) : ${nomErr.message}` })
+  }
+
+  const nomineesByCategory = new Map<string, Array<{ id: string, name: string, image_url: string | null }>>()
+  for (const n of (nominees ?? [])) {
+    if (!nomineesByCategory.has(n.category_id)) nomineesByCategory.set(n.category_id, [])
+    nomineesByCategory.get(n.category_id)!.push({ id: n.id, name: n.name, image_url: n.image_url })
+  }
+
+  // 3) Stats globales
+  const { count: totalVotes, error: totErr } = await supabase
+    .from('votes')
+    .select('id', { count: 'exact', head: true })
+  if (totErr) {
+    throw createError({ statusCode: 500, statusMessage: `Erreur DB (totalVotes) : ${totErr.message}` })
+  }
+
+  const { data: lastVote } = await supabase
+    .from('votes')
+    .select('voted_at')
+    .order('voted_at', { ascending: false })
+    .limit(1)
+    .maybeSingle()
+
+  const { data: uniqueRows } = await supabase
+    .from('votes')
+    .select('email')
+  const uniqueVoters = new Set((uniqueRows ?? []).map(r => r.email)).size
+
+  // 4) Construction du payload
+  const results = (categories ?? []).map((cat) => {
+    const cMap = countMap.get(cat.id) ?? new Map<string, number>()
+    const catNominees = nomineesByCategory.get(cat.id) ?? []
+    const catTotal = catNominees.reduce((sum, n) => sum + (cMap.get(n.id) ?? 0), 0)
+    const nomineesWithVotes = catNominees
+      .map((n) => {
+        const votes = cMap.get(n.id) ?? 0
+        return {
+          id: n.id,
+          name: n.name,
+          imageUrl: n.image_url,
+          votes,
+          percentage: catTotal > 0 ? ((votes / catTotal) * 100).toFixed(1) : '0',
+        }
+      })
+      .sort((a, b) => b.votes - a.votes)
 
     return {
-      id: category.id,
-      name: category.name,
-      totalVotes,
+      id: cat.id,
+      slug: cat.slug,
+      name: cat.name,
+      totalVotes: catTotal,
       nominees: nomineesWithVotes,
     }
   })
 
-  // Overall stats
-  const stats = {
-    totalVotes: votes.length,
-    uniqueVoters: new Set(votes.map(v => v.email)).size,
-    categoriesCount: categories.length,
-    lastVoteAt: votes.length > 0 
-      ? votes.reduce((latest, v) => v.votedAt > latest ? v.votedAt : latest, votes[0].votedAt)
-      : null,
-  }
-
   return {
     success: true,
-    stats,
+    stats: {
+      totalVotes: totalVotes ?? 0,
+      uniqueVoters,
+      categoriesCount: (categories ?? []).length,
+      lastVoteAt: lastVote?.voted_at ?? null,
+    },
     results,
   }
 })

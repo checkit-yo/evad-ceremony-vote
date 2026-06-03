@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { Nominee } from '~/data/mock'
+import type { Nominee } from '~/types'
 
 const props = defineProps<{
   isOpen: boolean
@@ -51,7 +51,7 @@ async function handleEmailSubmit() {
       body: {
         email: email.value,
         nomineeId: props.nominee?.id,
-        categoryId: props.nominee?.categoryId,
+        categoryId: props.nominee?.category_id,
       },
     })
 

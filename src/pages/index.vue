@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { categories } from '~/data/mock'
+const { data: categories } = useCategories()
 
 useSeoMeta({
   title: 'Evad Ceremony 2026 - Votez pour vos artistes préférés',
@@ -142,7 +142,7 @@ const howToVoteSteps = [
         </div>
 
         <div class="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 md:gap-6">
-          <CategoryCard v-for="category in categories" :key="category.id" :category="category" />
+          <CategoryCard v-for="category in (categories ?? [])" :key="category.id" :category="category" />
         </div>
       </div>
     </section>

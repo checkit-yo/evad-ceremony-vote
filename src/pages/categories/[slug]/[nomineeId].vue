@@ -1,47 +1,28 @@
 <script setup lang="ts">
-import { getCategoryBySlug, type Nominee, type Category } from '~/data/mock'
+import type { Nominee } from '~/types'
 
 const route = useRoute()
 const categorySlug = computed(() => route.params.slug as string)
 const nomineeId = computed(() => route.params.nomineeId as string)
 
-// Simulating async data loading
-const isLoading = ref(true)
-const category = ref<Category | null>(null)
-const nominee = ref<Nominee | null>(null)
+const { data: nomineeData, pending, error } = useNominee(nomineeId)
 
-// Load data
-onMounted(async () => {
-  await new Promise(resolve => setTimeout(resolve, 500))
-  
-  const foundCategory = getCategoryBySlug(categorySlug.value)
-  if (!foundCategory) {
-    throw createError({
-      statusCode: 404,
-      statusMessage: 'Catégorie non trouvée',
-    })
-  }
-  
-  const foundNominee = foundCategory.nominees.find(n => n.id === nomineeId.value)
-  if (!foundNominee) {
-    throw createError({
-      statusCode: 404,
-      statusMessage: 'Nominé non trouvé',
-    })
-  }
-  
-  category.value = foundCategory
-  nominee.value = foundNominee
-  isLoading.value = false
+if (error.value) {
+  throw createError({ statusCode: 404, statusMessage: 'Nominé non trouvé' })
+}
+
+const category = computed(() => nomineeData.value?.category ?? null)
+const nominee = computed<Nominee | null>(() => {
+  if (!nomineeData.value) return null
+  const { category, ...rest } = nomineeData.value as any
+  return rest as Nominee
 })
 
-// SEO
 useSeoMeta({
   title: () => nominee.value ? `${nominee.value.name} - ${category.value?.name} - Evad Ceremony` : 'Chargement...',
   description: () => nominee.value?.description || '',
 })
 
-// Voting modal state
 const isVoteModalOpen = ref(false)
 
 function openVoteModal() {
@@ -52,15 +33,10 @@ function closeVoteModal() {
   isVoteModalOpen.value = false
 }
 
-function handleVoteSuccess() {
-  console.log('Vote successful!')
-}
+function handleVoteSuccess() {}
 
-// Share functionality
 const shareUrl = computed(() => {
-  if (typeof window !== 'undefined') {
-    return window.location.href
-  }
+  if (typeof window !== 'undefined') return window.location.href
   return ''
 })
 
@@ -70,9 +46,7 @@ async function copyLink() {
   if (typeof navigator !== 'undefined' && navigator.clipboard) {
     await navigator.clipboard.writeText(shareUrl.value)
     isCopied.value = true
-    setTimeout(() => {
-      isCopied.value = false
-    }, 2000)
+    setTimeout(() => { isCopied.value = false }, 2000)
   }
 }
 
@@ -84,28 +58,26 @@ async function shareNative() {
         text: `Vote pour ${nominee.value?.name} dans la catégorie ${category.value?.name} !`,
         url: shareUrl.value,
       })
-    } catch (err) {
-      // User cancelled or share failed
+    } catch {
       copyLink()
     }
   } else {
     copyLink()
   }
 }
+
+const isLoading = computed(() => pending.value && !nomineeData.value)
+const imageUrl = computed(() => nominee.value?.image_url || '/placeholder-nominee.svg')
 </script>
 
 <template>
   <div class="pt-20 grain">
-    <!-- Header -->
     <section class="bg-burgundy pt-8 pb-4 md:pt-12 md:pb-6 border-b border-cream-300/20">
       <div class="container mx-auto px-4">
-        <!-- Breadcrumb -->
         <nav class="mb-8">
           <ol class="flex items-center gap-2 text-cream-500 font-body text-sm">
             <li>
-              <NuxtLink to="/" class="hover:text-gold transition-colors duration-500">
-                Accueil
-              </NuxtLink>
+              <NuxtLink to="/" class="hover:text-gold transition-colors duration-500">Accueil</NuxtLink>
             </li>
             <li>
               <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -132,68 +104,36 @@ async function shareNative() {
       </div>
     </section>
 
-    <!-- Main Content -->
     <section class="py-8 md:py-16 bg-burgundy-950">
       <div class="container mx-auto px-4">
         <template v-if="!isLoading && nominee && category">
-          <div class="max-w-4xl mx-auto">
+          <div class="max-w-3xl mx-auto">
             <div class="luxury-card border border-cream-400/10 overflow-hidden">
-              <!-- Top: Image + Video -->
-              <div class="grid grid-cols-1 md:grid-cols-2">
-                <!-- Image -->
-                <div class="aspect-square">
-                  <img
-                    :src="nominee.imageUrl"
-                    :alt="nominee.name"
-                    class="w-full h-full object-cover"
-                  >
-                </div>
-                
-                <!-- Video -->
-                <div class="aspect-square bg-burgundy-950 flex items-center justify-center">
-                  <iframe
-                    :src="`https://www.youtube.com/embed/${nominee.youtubeVideoId}`"
-                    class="w-full h-full"
-                    frameborder="0"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowfullscreen
-                  />
-                </div>
+              <div class="aspect-square md:aspect-[16/10]">
+                <img :src="imageUrl" :alt="nominee.name" class="w-full h-full object-cover">
               </div>
 
-              <!-- Content -->
               <div class="p-6 md:p-8">
-                <!-- Category badge -->
-                <NuxtLink 
+                <NuxtLink
                   :to="`/categories/${category.slug}`"
                   class="inline-flex items-center gap-2 px-3 py-1 border border-gold/30 text-gold text-xs font-title tracking-wider mb-4 hover:bg-gold/10 transition-colors duration-500"
                 >
                   {{ category.name }}
                 </NuxtLink>
 
-                <!-- Name -->
                 <h1 class="font-title font-light text-2xl md:text-3xl text-cream-100 mb-4 tracking-wide">
                   {{ nominee.name }}
                 </h1>
 
-                <!-- Description -->
                 <p class="font-body text-cream-500 text-base leading-relaxed mb-8">
                   {{ nominee.description }}
                 </p>
 
-                <!-- Actions -->
                 <div class="flex flex-col sm:flex-row gap-4">
-                  <button
-                    class="btn btn-gold text-sm flex-1 py-4"
-                    @click="openVoteModal"
-                  >
+                  <button class="btn btn-gold text-sm flex-1 py-4" @click="openVoteModal">
                     Voter pour {{ nominee.name.split(' ')[0] }}
                   </button>
-                  
-                  <button
-                    class="btn btn-outline py-4 px-6"
-                    @click="shareNative"
-                  >
+                  <button class="btn btn-outline py-4 px-6" @click="shareNative">
                     <svg v-if="!isCopied" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
                     </svg>
@@ -206,7 +146,6 @@ async function shareNative() {
               </div>
             </div>
 
-            <!-- Back link -->
             <div class="mt-8 text-center">
               <NuxtLink
                 :to="`/categories/${category.slug}`"
@@ -221,14 +160,10 @@ async function shareNative() {
           </div>
         </template>
 
-        <!-- Loading skeleton -->
         <template v-else>
-          <div class="max-w-4xl mx-auto">
+          <div class="max-w-3xl mx-auto">
             <div class="luxury-card border border-cream-400/10 overflow-hidden">
-              <div class="grid grid-cols-1 md:grid-cols-2">
-                <div class="aspect-square bg-cream-400/10 animate-pulse" />
-                <div class="aspect-square bg-cream-400/5 animate-pulse" />
-              </div>
+              <div class="aspect-square md:aspect-[16/10] bg-cream-400/10 animate-pulse" />
               <div class="p-6 md:p-8 space-y-4">
                 <div class="h-6 w-32 bg-cream-400/10 animate-pulse" />
                 <div class="h-10 w-2/3 bg-cream-400/10 animate-pulse" />
@@ -245,7 +180,6 @@ async function shareNative() {
       </div>
     </section>
 
-    <!-- Vote Modal -->
     <VoteModal
       :is-open="isVoteModalOpen"
       :nominee="nominee"
