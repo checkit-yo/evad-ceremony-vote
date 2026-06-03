@@ -38,6 +38,6 @@ export default defineNuxtConfig({
     supabaseServiceRoleKey: process.env.SUPABASE_SERVICE_ROLE_KEY || '',
     supabaseStorageBucket: process.env.SUPABASE_STORAGE_BUCKET || 'nominee-images',
     resendApiKey: process.env.RESEND_API_KEY || '',
-    resendFromEmail: process.env.RESEND_FROM_EMAIL || 'EVAD Ceremony <onboarding@resend.dev>',
+    resendFromEmail: process.env.RESEND_FROM_EMAIL || 'EVAD Creation <onboarding@resend.dev>',
   },
 })
