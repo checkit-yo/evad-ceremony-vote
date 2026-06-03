@@ -1,9 +1,11 @@
 <script setup lang="ts">
-import type { Category } from '~/data/mock'
+import type { Category } from '~/types'
 
-defineProps<{
+const props = defineProps<{
   category: Category
 }>()
+
+const count = computed(() => props.category.nominee_count ?? 0)
 </script>
 
 <template>
@@ -18,7 +20,7 @@ defineProps<{
       <h3 class="font-title font-light text-sm md:text-lg text-cream-100 mb-2 md:mb-3 group-hover:text-gold transition-colors duration-500 tracking-wide line-clamp-2">
         {{ category.name }}
       </h3>
-      
+
       <!-- Description hidden on mobile -->
       <p class="hidden md:block font-body text-cream-500 text-sm leading-relaxed line-clamp-2 mb-4">
         {{ category.description }}
@@ -26,7 +28,7 @@ defineProps<{
 
       <div class="flex items-center justify-between mt-3 md:mt-4">
         <span class="text-xs text-cream-500 font-body">
-          {{ category.nominees.length }} nominé{{ category.nominees.length > 1 ? 's' : '' }}
+          {{ count }} nominé{{ count > 1 ? 's' : '' }}
         </span>
         <span class="text-gold font-title text-xs tracking-widest uppercase group-hover:translate-x-1 transition-transform duration-500 flex items-center gap-1">
           <span class="hidden sm:inline">Voir</span>

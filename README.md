@@ -1,153 +1,130 @@
 # Evad Ceremony - Voting Platform
 
-A ceremonial voting platform for the Evad Ceremony 2026, built with Nuxt 3, Vue 3, and Tailwind CSS.
+Plateforme de vote pour la cérémonie EVAD 2026, construite avec Nuxt 3, Supabase et Resend.
 
-## Features
+## Fonctionnalités
 
-- 🎭 10 award categories with up to 16 nominees each
-- 📧 Email-based OTP verification for votes
-- 🔒 Server-side API routes (no exposed endpoints)
-- 📱 Fully responsive (mobile + desktop)
-- 🎨 Elegant, Cannes-style ceremonial design
-- 👑 Admin panel for viewing vote results
+- 10 catégories de prix avec jusqu'à 16 nominés chacune
+- Vote sécurisé par OTP email (Resend)
+- Persistence Supabase (Postgres + Storage pour les images)
+- Admin panel : résultats temps réel + CRUD catégories/nominés (avec upload image)
+- 1 vote par couple (email, catégorie) garanti au niveau DB
+- Anti-fraude : rate limit, hash OTP, max 5 tentatives
 
-## Tech Stack
+## Stack
 
-- **Framework**: Nuxt 3 (SSR)
-- **Frontend**: Vue 3 + Composition API
-- **Styling**: Tailwind CSS v3
-- **Fonts**: Montserrat (titles) + The Youngest (body)
-- **Colors**: Burgundy (#5d0e16), Gold (#ffcb39), Cream (#e0c8a9), White
+- **Framework** : Nuxt 3 (SSR)
+- **DB / Storage** : Supabase (Postgres + Storage public)
+- **Email OTP** : Resend
+- **Styling** : Tailwind CSS
 
-## Getting Started
+## Setup
 
-### Prerequisites
+### Prérequis
 
-- Node.js 18+ 
-- pnpm (recommended) or npm
+- Node.js 20+
+- pnpm
+- Un projet Supabase (https://supabase.com)
+- Un compte Resend (https://resend.com)
 
-### Installation
+### 1. Installation
 
 ```bash
-# Install dependencies
 pnpm install
+```
 
-# Start development server
+### 2. Variables d'environnement
+
+Copier `.env.example` en `.env` et remplir :
+
+```env
+ADMIN_PASSWORD=changeme
+SUPABASE_URL=https://xxxxx.supabase.co
+SUPABASE_SERVICE_ROLE_KEY=eyJhbGc...
+SUPABASE_STORAGE_BUCKET=nominee-images
+RESEND_API_KEY=re_xxxxx
+RESEND_FROM_EMAIL=EVAD Ceremony <vote@votre-domaine.com>
+```
+
+- `SUPABASE_URL` + `SUPABASE_SERVICE_ROLE_KEY` : Supabase → Project Settings → API
+- `RESEND_API_KEY` : Resend → API Keys (en prod, vérifier un domaine d'envoi via DNS SPF + DKIM)
+- En dev sans domaine vérifié, utiliser `EVAD Ceremony <onboarding@resend.dev>` (n'envoie qu'à l'email propriétaire du compte Resend)
+
+### 3. Initialiser la base Supabase
+
+Dans Supabase Studio → SQL Editor, exécuter le contenu de :
+
+```
+supabase/migrations/20260603120000_init_schema.sql
+```
+
+Puis créer le bucket Storage `nominee-images` (public) :
+- Supabase Studio → Storage → New bucket → name `nominee-images` → cocher "Public bucket"
+
+### 4. Seed initial des catégories et nominés
+
+```bash
+pnpm seed
+```
+
+Cela peuple les 10 catégories et leurs nominés depuis les valeurs initiales. Idempotent (upsert).
+
+### 5. Lancer
+
+```bash
 pnpm dev
 ```
 
-The site will be available at `http://localhost:3000`
+Le site est disponible sur http://localhost:3000.
 
-### Admin Panel
+## Admin
 
-Access the admin panel at `/admin` with the default password: `evad2026`
+`/admin` — password = `ADMIN_PASSWORD` (par défaut `evad2026`).
 
-(Change this in production via the `ADMIN_PASSWORD` environment variable)
+Trois onglets :
+- **Résultats** : statistiques et classement par catégorie
+- **Catégories** : CRUD (créer, éditer, supprimer en cascade)
+- **Nominés** : CRUD avec upload d'image vers Supabase Storage
 
-## Project Structure
+## Architecture
 
-```
-evad-ceremony-vote/
-├── app.vue                    # App entry
-├── nuxt.config.ts             # Nuxt configuration
-├── tailwind.config.ts         # Tailwind configuration
-├── assets/
-│   └── css/
-│       └── main.css           # Global styles
-├── components/
-│   ├── AppHeader.vue          # Navigation header
-│   ├── AppFooter.vue          # Footer with credits
-│   ├── CategoryCard.vue       # Category preview card
-│   ├── NomineeCard.vue        # Nominee card with video
-│   ├── NomineeSkeleton.vue    # Loading skeleton
-│   └── VoteModal.vue          # Email + OTP voting flow
-├── data/
-│   └── mock.ts                # Mock data & in-memory storage
-├── layouts/
-│   └── default.vue            # Default layout
-├── pages/
-│   ├── index.vue              # Homepage
-│   ├── categories/
-│   │   └── [slug].vue         # Category detail page
-│   └── admin/
-│       └── index.vue          # Admin dashboard
-├── public/
-│   └── fonts/                 # Custom fonts (add The Youngest here)
-└── server/
-    └── api/
-        ├── vote.post.ts       # Initiate vote & send OTP
-        ├── verify-otp.post.ts # Verify OTP & record vote
-        └── admin/
-            └── results.get.ts # Get voting results (protected)
-```
+- `src/server/api/` : routes Nitro publiques (`vote`, `verify-otp`, `categories`, `nominees`)
+- `src/server/api/admin/` : routes admin protégées par middleware `admin-auth`
+- `src/server/utils/` : `supabase` (client service role), `resend`, `otp`, `storage`, `admin-auth`
+- `src/server/middleware/admin-auth.ts` : check password sur toutes les routes `/api/admin/*`
+- `src/composables/` : `useCategories`, `useCategory`, `useNominee`, `useAdmin`
+- `src/layouts/admin.vue` : layout admin avec login + nav onglets
+- `src/pages/admin/` : pages admin (results, categories, nominees)
+- `supabase/migrations/` : SQL versionné
+- `scripts/seed-supabase.ts` : seed initial
 
-## Configuration
+## Sécurité
 
-### Environment Variables
+- `SUPABASE_SERVICE_ROLE_KEY` exclusivement côté serveur (jamais en `runtimeConfig.public`).
+- RLS activé sur toutes les tables sans policy → seul le service role accède (anon key inerte).
+- Email normalisé (lowercase + trim) avant query/insert.
+- OTP hashé SHA-256 en DB, TTL 10 min, max 5 tentatives.
+- Anti-double-vote via contrainte UNIQUE `(email, category_id)` en DB.
+- Upload image : validation mime + taille (< 5 MB) côté backend.
 
-```env
-# Admin password for results access
-ADMIN_PASSWORD=your-secure-password
-```
+## Dates clés
 
-### Custom Fonts
+- Ouverture des votes : 7 juin 2026
+- Cérémonie : 18 octobre 2026
 
-To use "The Youngest" font:
-
-1. Add `TheYoungest.woff2` and `TheYoungest.woff` to `/public/fonts/`
-2. The CSS is already configured in `main.css`
-
-Or find an alternative similar font from Google Fonts.
-
-## Mock Data
-
-The platform uses mock data for demonstration:
-
-- **Categories**: 10 pre-defined categories
-- **Nominees**: 6-16 per category with placeholder images
-- **Votes**: Randomly seeded for demo purposes
-
-In production, replace with real database connections.
-
-## Key Dates
-
-- **Voting Opens**: June 7, 2026
-- **Ceremony Date**: October 18, 2026
-
-## Customization
-
-### Colors
-
-Edit `tailwind.config.ts` to change the color palette:
-
-```ts
-colors: {
-  burgundy: { DEFAULT: '#5d0e16', ... },
-  gold: { DEFAULT: '#ffcb39', ... },
-  cream: { DEFAULT: '#e0c8a9', ... },
-}
-```
-
-### Categories
-
-Edit `data/mock.ts` to modify categories and nominees.
-
-## Production Deployment
+## Production
 
 ```bash
-# Build for production
 pnpm build
-
-# Preview production build
 pnpm preview
 ```
 
-For deployment, see [Nuxt deployment documentation](https://nuxt.com/docs/getting-started/deployment).
+Voir https://nuxt.com/docs/getting-started/deployment.
 
 ## Credits
 
-Developed with ❤️ by [Checkit](https://checkit.dance)
+Développé par [Checkit](https://checkit.dance)
 
 ---
 
-© 2026 Evad Ceremony. All rights reserved.
+© 2026 EVAD Ceremony.

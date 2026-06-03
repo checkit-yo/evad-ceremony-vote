@@ -34,5 +34,10 @@ export default defineNuxtConfig({
 
   runtimeConfig: {
     adminPassword: process.env.ADMIN_PASSWORD || 'evad2026',
+    supabaseUrl: process.env.SUPABASE_URL || '',
+    supabaseServiceRoleKey: process.env.SUPABASE_SERVICE_ROLE_KEY || '',
+    supabaseStorageBucket: process.env.SUPABASE_STORAGE_BUCKET || 'nominee-images',
+    resendApiKey: process.env.RESEND_API_KEY || '',
+    resendFromEmail: process.env.RESEND_FROM_EMAIL || 'EVAD Ceremony <onboarding@resend.dev>',
   },
 })

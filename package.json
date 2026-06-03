@@ -7,17 +7,24 @@
     "dev": "nuxt dev",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
-    "postinstall": "nuxt prepare"
+    "postinstall": "nuxt prepare",
+    "seed": "node --env-file=.env --import tsx scripts/seed-supabase.ts"
   },
   "dependencies": {
     "@nuxt/fonts": "^0.10.0",
+    "@supabase/supabase-js": "^2.107.0",
     "nuxt": "^3.14.0",
+    "resend": "^6.12.4",
     "vue": "^3.5.0",
     "vue-router": "^4.4.0"
   },
   "devDependencies": {
     "@nuxtjs/tailwindcss": "^6.12.0",
+    "@oxc-minify/binding-darwin-arm64": "0.131.0",
+    "@oxc-parser/binding-darwin-arm64": "0.131.0",
+    "@oxc-transform/binding-darwin-arm64": "0.131.0",
     "@types/node": "^22.0.0",
+    "tsx": "^4.22.4",
     "typescript": "^5.6.0"
   }
 }

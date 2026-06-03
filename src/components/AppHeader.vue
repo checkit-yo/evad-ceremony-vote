@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { categories } from '~/data/mock'
+const { data: categories } = useCategories()
 
 defineProps<{
   isMenuOpen: boolean
@@ -67,7 +67,7 @@ function handleScroll() {
             <div class="absolute top-full left-0 mt-4 w-64 bg-burgundy border border-cream-300/20 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 transform translate-y-2 group-hover:translate-y-0">
               <div class="py-2">
                 <NuxtLink
-                  v-for="category in categories"
+                  v-for="category in (categories ?? [])"
                   :key="category.id"
                   :to="`/categories/${category.slug}`"
                   class="block px-4 py-2.5 text-cream-400 hover:text-gold hover:bg-cream-400/5 transition-colors duration-300 font-body text-sm"
@@ -132,7 +132,7 @@ function handleScroll() {
             <p class="font-title text-xs uppercase tracking-widest text-cream-500 mb-3">Catégories</p>
             <div class="grid grid-cols-2 gap-2">
               <NuxtLink
-                v-for="category in categories"
+                v-for="category in (categories ?? [])"
                 :key="category.id"
                 :to="`/categories/${category.slug}`"
                 class="block px-3 py-2 text-sm text-cream-400 hover:text-gold transition-colors font-body"
