@@ -116,7 +116,8 @@ async function onDelete(n: Nominee) {
 
     <div v-if="isLoading && nominees.length === 0" class="text-slate-400 text-sm">Chargement…</div>
 
-    <div v-else class="bg-slate-800/50 border border-slate-700/50 rounded-2xl overflow-hidden">
+    <!-- Desktop: table -->
+    <div v-else class="hidden md:block bg-slate-800/50 border border-slate-700/50 rounded-2xl overflow-hidden">
       <table class="w-full text-sm">
         <thead class="bg-slate-800/80 text-slate-400 text-xs uppercase tracking-wider">
           <tr>
@@ -145,7 +146,7 @@ async function onDelete(n: Nominee) {
             <td class="px-5 py-3 text-white font-medium">{{ n.name }}</td>
             <td class="px-5 py-3 text-slate-400">{{ categoryNameById.get(n.category_id) || '—' }}</td>
             <td class="px-5 py-3 text-slate-400">{{ n.display_order }}</td>
-            <td class="px-5 py-3 text-right">
+            <td class="px-5 py-3 text-right whitespace-nowrap">
               <button class="text-amber-400 hover:text-amber-300 text-xs mr-3" @click="openEdit(n)">Éditer</button>
               <button class="text-red-400 hover:text-red-300 text-xs" @click="onDelete(n)">Supprimer</button>
             </td>
@@ -155,6 +156,47 @@ async function onDelete(n: Nominee) {
           </tr>
         </tbody>
       </table>
+    </div>
+
+    <!-- Mobile: cards -->
+    <div v-if="!isLoading || nominees.length > 0" class="md:hidden space-y-3">
+      <div
+        v-for="n in nominees"
+        :key="n.id"
+        class="bg-slate-800/50 border border-slate-700/50 rounded-xl p-4"
+      >
+        <div class="flex items-start gap-3 mb-3">
+          <img
+            v-if="n.image_url"
+            :src="n.image_url"
+            :alt="n.name"
+            class="w-14 h-14 rounded-lg object-cover shrink-0"
+          >
+          <div v-else class="w-14 h-14 bg-slate-700 rounded-lg shrink-0" />
+          <div class="min-w-0 flex-1">
+            <p class="text-white font-medium truncate">{{ n.name }}</p>
+            <p class="text-slate-500 text-xs mt-0.5 truncate">{{ categoryNameById.get(n.category_id) || '—' }}</p>
+            <p class="text-slate-600 text-xs mt-1">Ordre : #{{ n.display_order }}</p>
+          </div>
+        </div>
+        <div class="flex items-center gap-2 pt-2 border-t border-slate-700/50">
+          <button
+            class="flex-1 text-amber-400 hover:text-amber-300 text-xs font-medium py-2 border border-amber-400/30 rounded-lg"
+            @click="openEdit(n)"
+          >
+            Éditer
+          </button>
+          <button
+            class="flex-1 text-red-400 hover:text-red-300 text-xs font-medium py-2 border border-red-400/30 rounded-lg"
+            @click="onDelete(n)"
+          >
+            Supprimer
+          </button>
+        </div>
+      </div>
+      <p v-if="nominees.length === 0" class="text-center py-8 text-slate-500 text-sm">
+        Aucun nominé.
+      </p>
     </div>
 
     <AdminModal

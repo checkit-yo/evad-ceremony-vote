@@ -83,7 +83,8 @@ async function onDelete(cat: Category) {
 
     <div v-if="isLoading && categories.length === 0" class="text-slate-400 text-sm">Chargement…</div>
 
-    <div v-else class="bg-slate-800/50 border border-slate-700/50 rounded-2xl overflow-hidden">
+    <!-- Desktop: table -->
+    <div v-else class="hidden md:block bg-slate-800/50 border border-slate-700/50 rounded-2xl overflow-hidden">
       <table class="w-full text-sm">
         <thead class="bg-slate-800/80 text-slate-400 text-xs uppercase tracking-wider">
           <tr>
@@ -104,7 +105,7 @@ async function onDelete(cat: Category) {
             <td class="px-5 py-3 text-white font-medium">{{ cat.name }}</td>
             <td class="px-5 py-3 text-slate-400 font-mono text-xs">{{ cat.slug }}</td>
             <td class="px-5 py-3 text-slate-400 max-w-xs truncate">{{ cat.description }}</td>
-            <td class="px-5 py-3 text-right">
+            <td class="px-5 py-3 text-right whitespace-nowrap">
               <button class="text-amber-400 hover:text-amber-300 text-xs mr-3" @click="openEdit(cat)">Éditer</button>
               <button class="text-red-400 hover:text-red-300 text-xs" @click="onDelete(cat)">Supprimer</button>
             </td>
@@ -114,6 +115,41 @@ async function onDelete(cat: Category) {
           </tr>
         </tbody>
       </table>
+    </div>
+
+    <!-- Mobile: cards -->
+    <div v-if="!isLoading || categories.length > 0" class="md:hidden space-y-3">
+      <div
+        v-for="cat in categories"
+        :key="cat.id"
+        class="bg-slate-800/50 border border-slate-700/50 rounded-xl p-4"
+      >
+        <div class="flex items-start justify-between gap-3 mb-2">
+          <div class="min-w-0 flex-1">
+            <p class="text-white font-medium truncate">{{ cat.name }}</p>
+            <p class="text-slate-500 font-mono text-xs mt-0.5 truncate">/{{ cat.slug }}</p>
+          </div>
+          <span class="text-slate-500 text-xs shrink-0">#{{ cat.display_order }}</span>
+        </div>
+        <p v-if="cat.description" class="text-slate-400 text-xs line-clamp-2 mb-3">{{ cat.description }}</p>
+        <div class="flex items-center gap-2 pt-2 border-t border-slate-700/50">
+          <button
+            class="flex-1 text-amber-400 hover:text-amber-300 text-xs font-medium py-2 border border-amber-400/30 rounded-lg"
+            @click="openEdit(cat)"
+          >
+            Éditer
+          </button>
+          <button
+            class="flex-1 text-red-400 hover:text-red-300 text-xs font-medium py-2 border border-red-400/30 rounded-lg"
+            @click="onDelete(cat)"
+          >
+            Supprimer
+          </button>
+        </div>
+      </div>
+      <p v-if="categories.length === 0" class="text-center py-8 text-slate-500 text-sm">
+        Aucune catégorie. Cliquez sur "Ajouter".
+      </p>
     </div>
 
     <AdminModal
