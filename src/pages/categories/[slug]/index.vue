@@ -15,7 +15,7 @@ function shuffleArray<T>(array: T[]): T[] {
   const shuffled = [...array]
   for (let i = shuffled.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1))
-    ;[shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]]
+      ;[shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]]
   }
   return shuffled
 }
@@ -43,15 +43,15 @@ function closeVoteModal() {
   selectedNominee.value = null
 }
 
-function handleVoteSuccess() {}
+function handleVoteSuccess() { }
 
 const isLoading = computed(() => pending.value && !category.value)
 </script>
 
 <template>
   <div class="pt-20 grain">
-    <!-- Header -->
-    <section class="bg-burgundy py-8 md:py-12 border-b border-cream-300/20">
+    <!-- Header (sticky) -->
+    <section class="bg-burgundy py-8 md:py-12 border-b border-cream-300/20 sticky top-16 z-20">
       <div class="container mx-auto px-4">
         <!-- Breadcrumb -->
         <nav class="mb-8">
@@ -97,9 +97,13 @@ const isLoading = computed(() => pending.value && !category.value)
             <p class="font-body text-cream-500 text-base md:text-lg animate-fade-in stagger-1 leading-relaxed">
               {{ category.description }}
             </p>
-            <div class="flex items-center gap-4 mt-6 animate-fade-in stagger-2">
-              <span class="inline-flex items-center gap-2 px-4 py-2 border border-cream-400/20 text-cream-400 font-body text-sm">
+            <div class="flex flex-wrap items-center gap-3 mt-6 animate-fade-in stagger-2">
+              <span
+                class="inline-flex items-center gap-2 px-4 py-2 border border-cream-400/20 text-cream-400 font-body text-sm">
                 {{ category.nominees.length }} nominé{{ category.nominees.length > 1 ? 's' : '' }}
+              </span>
+              <span class="px-4 py-2 border border-gold/30 text-gold/80 font-body text-sm">
+                Un seul vote autorisé
               </span>
             </div>
           </template>
@@ -119,15 +123,9 @@ const isLoading = computed(() => pending.value && !category.value)
           <div v-if="shuffledNominees.length === 0" class="text-center py-16 text-cream-500">
             Aucun nominé pour cette catégorie pour le moment.
           </div>
-          <div v-else class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            <NomineeCard
-              v-for="(nominee, index) in shuffledNominees"
-              :key="nominee.id"
-              :nominee="nominee"
-              :category-slug="slug"
-              :class="[`stagger-${(index % 6) + 1}`]"
-              @vote="openVoteModal"
-            />
+          <div v-else class="grid grid-cols-2 gap-3 md:gap-6">
+            <NomineeCard v-for="(nominee, index) in shuffledNominees" :key="nominee.id" :nominee="nominee"
+              :category-slug="slug" :class="[`stagger-${(index % 6) + 1}`]" @vote="openVoteModal" />
           </div>
         </template>
         <template v-else>
@@ -148,12 +146,9 @@ const isLoading = computed(() => pending.value && !category.value)
         </div>
 
         <div class="flex flex-wrap justify-center gap-3">
-          <NuxtLink
-            v-for="cat in (allCategories ?? []).filter(c => c.slug !== slug)"
-            :key="cat.id"
+          <NuxtLink v-for="cat in (allCategories ?? []).filter(c => c.slug !== slug)" :key="cat.id"
             :to="`/categories/${cat.slug}`"
-            class="px-4 py-2 border border-cream-400/20 hover:border-gold hover:text-gold text-cream-400 font-title text-xs tracking-wider transition-all duration-500"
-          >
+            class="px-4 py-2 border border-cream-400/20 hover:border-gold hover:text-gold text-cream-400 font-title text-xs tracking-wider transition-all duration-500">
             {{ cat.name }}
           </NuxtLink>
         </div>
@@ -161,12 +156,7 @@ const isLoading = computed(() => pending.value && !category.value)
     </section>
 
     <!-- Vote Modal -->
-    <VoteModal
-      :is-open="isVoteModalOpen"
-      :nominee="selectedNominee"
-      :category-name="category?.name || ''"
-      @close="closeVoteModal"
-      @success="handleVoteSuccess"
-    />
+    <VoteModal :is-open="isVoteModalOpen" :nominee="selectedNominee" :category-name="category?.name || ''"
+      @close="closeVoteModal" @success="handleVoteSuccess" />
   </div>
 </template>
