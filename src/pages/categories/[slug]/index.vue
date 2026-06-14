@@ -50,11 +50,11 @@ const isLoading = computed(() => pending.value && !category.value)
 
 <template>
   <div class="pt-20 grain">
-    <!-- Header (sticky) -->
-    <section class="bg-burgundy py-8 md:py-12 border-b border-cream-300/20 sticky top-16 z-20">
+    <!-- Header (sticky on mobile only) -->
+    <section class="bg-burgundy py-4 md:py-12 border-b border-cream-300/20 sticky top-16 z-20 md:static">
       <div class="container mx-auto px-4">
-        <!-- Breadcrumb -->
-        <nav class="mb-8">
+        <!-- Breadcrumb (desktop only) -->
+        <nav class="mb-8 hidden md:block">
           <ol class="flex items-center gap-2 text-cream-500 font-body text-sm">
             <li>
               <NuxtLink to="/" class="hover:text-gold transition-colors duration-500">
@@ -90,14 +90,15 @@ const isLoading = computed(() => pending.value && !category.value)
         <!-- Title -->
         <div class="max-w-3xl">
           <template v-if="!isLoading && category">
-            <div class="w-12 h-px bg-gold mb-6 animate-fade-in" />
-            <h1 class="font-script text-4xl sm:text-5xl md:text-6xl text-cream-100 mb-4 animate-fade-in">
+            <div class="w-12 h-px bg-gold mb-4 md:mb-6 animate-fade-in hidden md:block" />
+            <h1 class="font-title text-2xl md:text-4xl lg:text-5xl text-cream-100 animate-fade-in">
               {{ category.name }}
             </h1>
-            <p class="font-body text-cream-500 text-base md:text-lg animate-fade-in stagger-1 leading-relaxed">
+            <!-- Desktop only: description and badges -->
+            <p class="hidden md:block font-body text-cream-500 text-base md:text-lg animate-fade-in stagger-1 leading-relaxed mt-4">
               {{ category.description }}
             </p>
-            <div class="flex flex-wrap items-center gap-3 mt-6 animate-fade-in stagger-2">
+            <div class="hidden md:flex flex-wrap items-center gap-3 mt-6 animate-fade-in stagger-2">
               <span
                 class="inline-flex items-center gap-2 px-4 py-2 border border-cream-400/20 text-cream-400 font-body text-sm">
                 {{ category.nominees.length }} nominé{{ category.nominees.length > 1 ? 's' : '' }}
@@ -108,9 +109,9 @@ const isLoading = computed(() => pending.value && !category.value)
             </div>
           </template>
           <template v-else>
-            <div class="h-10 w-2/3 bg-cream-400/10 animate-pulse mb-4" />
-            <div class="h-5 w-full bg-cream-400/5 animate-pulse mb-2" />
-            <div class="h-5 w-4/5 bg-cream-400/5 animate-pulse" />
+            <div class="h-8 md:h-10 w-2/3 bg-cream-400/10 animate-pulse mb-4" />
+            <div class="hidden md:block h-5 w-full bg-cream-400/5 animate-pulse mb-2" />
+            <div class="hidden md:block h-5 w-4/5 bg-cream-400/5 animate-pulse" />
           </template>
         </div>
       </div>
@@ -123,7 +124,7 @@ const isLoading = computed(() => pending.value && !category.value)
           <div v-if="shuffledNominees.length === 0" class="text-center py-16 text-cream-500">
             Aucun nominé pour cette catégorie pour le moment.
           </div>
-          <div v-else class="grid grid-cols-2 gap-3 md:gap-6">
+          <div v-else class="flex flex-col gap-3 md:grid md:grid-cols-2 md:gap-6">
             <NomineeCard v-for="(nominee, index) in shuffledNominees" :key="nominee.id" :nominee="nominee"
               :category-slug="slug" :class="[`stagger-${(index % 6) + 1}`]" @vote="openVoteModal" />
           </div>

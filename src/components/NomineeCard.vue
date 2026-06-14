@@ -19,7 +19,34 @@ const imageUrl = computed(() => props.nominee.image_url || '/placeholder-nominee
 </script>
 
 <template>
-  <div class="luxury-card overflow-hidden animate-fade-in border border-cream-300/20">
+  <!-- Mobile: List style -->
+  <div class="md:hidden luxury-card overflow-hidden animate-fade-in border border-cream-300/20">
+    <div class="flex items-center gap-3 p-3">
+      <!-- Image -->
+      <NuxtLink :to="nomineeUrl" class="block relative w-14 h-14 flex-shrink-0 overflow-hidden">
+        <img :src="imageUrl" :alt="nominee.name"
+          class="w-full h-full object-cover"
+          loading="lazy">
+      </NuxtLink>
+      
+      <!-- Content -->
+      <div class="flex-1 min-w-0">
+        <NuxtLink :to="nomineeUrl" class="block">
+          <h3 class="font-title font-light text-sm text-cream-100 truncate">
+            {{ nominee.name }}
+          </h3>
+        </NuxtLink>
+      </div>
+      
+      <!-- Vote button -->
+      <button type="button" class="btn btn-primary text-xs px-4 py-2 flex-shrink-0" @click.stop="handleVote">
+        Voter
+      </button>
+    </div>
+  </div>
+
+  <!-- Desktop: Card style -->
+  <div class="hidden md:block luxury-card overflow-hidden animate-fade-in border border-cream-300/20">
     <!-- Image -->
     <NuxtLink :to="nomineeUrl" class="block relative aspect-square overflow-hidden group">
       <img :src="imageUrl" :alt="nominee.name"
