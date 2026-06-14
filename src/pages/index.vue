@@ -3,11 +3,11 @@ const { data: categories } = useCategories()
 
 useSeoMeta({
   title: 'Evad Ceremony 2026 - Votez pour vos artistes préférés',
-  description: 'La cérémonie qui célèbre l\'excellence de la danse. Votez pour vos artistes préférés et rejoignez-nous le 18 octobre 2026.',
+  description: 'La cérémonie qui célèbre l\'excellence de la danse. Votez pour vos artistes préférés et rejoignez-nous le 17 octobre 2026.',
 })
 
 // Countdown to ceremony date
-const ceremonyDate = new Date('2026-10-18T20:00:00')
+const ceremonyDate = new Date('2026-10-17T20:00:00')
 const votingOpenDate = new Date('2026-06-07T00:00:00')
 const now = ref(new Date())
 
@@ -55,70 +55,91 @@ const howToVoteSteps = [
 <template>
   <div class="grain">
     <!-- Hero Section -->
-    <section class="relative min-h-screen flex items-center justify-center bg-burgundy overflow-hidden">
-      <!-- Subtle gold gradient orbs -->
+    <section class="relative h-screen min-h-[600px] flex items-center justify-center bg-burgundy overflow-hidden hero-height">
+      <!-- Enhanced gold gradient orbs -->
       <div class="absolute inset-0 overflow-hidden">
-        <div class="absolute top-1/4 left-1/4 w-96 h-96 bg-gold/5 rounded-full blur-[100px]" />
-        <div class="absolute bottom-1/4 right-1/4 w-[500px] h-[500px] bg-gold/3 rounded-full blur-[120px]" />
+        <div
+          class="absolute top-1/4 left-1/4 w-[400px] h-[400px] bg-gold/8 rounded-full blur-[120px] animate-pulse-gold" />
+        <div
+          class="absolute bottom-1/3 right-1/4 w-[600px] h-[600px] bg-gold/5 rounded-full blur-[150px] animate-pulse-gold"
+          style="animation-delay: 2s;" />
+        <div
+          class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-burgundy-900/50 rounded-full blur-[100px]" />
       </div>
+
+      <!-- Decorative gold lines -->
+      <div class="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-gold/30 to-transparent" />
+      <div class="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-gold/20 to-transparent" />
 
       <!-- Elegant border frame (desktop only) -->
       <div
-        class="hidden md:block absolute top-24 left-8 right-8 bottom-8 border border-cream-400/10 pointer-events-none" />
+        class="hidden md:block absolute top-20 left-12 right-12 bottom-12 border border-cream-400/10 pointer-events-none" />
 
-      <div class="container mx-auto px-4 py-24 md:py-32 relative z-10 text-center">
-        <!-- Minimalist logo -->
+      <div class="container mx-auto px-4 py-8 md:py-12 relative z-10 text-center h-full flex flex-col justify-center gap-[5vh] md:gap-0">
+        <!-- Top section: Title -->
+        <div class="flex flex-col justify-center">
+          <!-- Decorative top element -->
+          <div class="flex items-center justify-center gap-4 mb-6 md:mb-4 animate-fade-in">
+            <div class="w-12 h-px bg-gradient-to-r from-transparent to-gold/50" />
+            <div class="w-2 h-2 rotate-45 border border-gold/50" />
+            <div class="w-12 h-px bg-gradient-to-l from-transparent to-gold/50" />
+          </div>
 
-        <h1
-          class="font-script font-normal text-6xl sm:text-7xl md:text-8xl lg:text-9xl text-cream-100 mb-4 md:mb-6 animate-slide-up">
-          EVAD
-        </h1>
-        <h2
-          class="font-script font-normal text-3xl sm:text-4xl md:text-5xl text-gold mb-6 md:mb-8 animate-slide-up stagger-1">
-          Ceremony
-        </h2>
+          <h1
+            class="font-normal text-7xl sm:text-6xl md:text-7xl lg:text-8xl text-cream-100 mb-4 animate-slide-up text-glow-gold">
+            EVAD
+          </h1>
+          <h2
+            class="font-script font-normal text-4xl sm:text-3xl md:text-4xl text-gold mb-6 md:mb-8 animate-slide-up stagger-1">
+            Ceremony
+          </h2>
 
-        <div class="gold-divider mb-6 md:mb-8 animate-fade-in stagger-2" />
+          <div class="gold-divider mb-6 md:mb-8 animate-fade-in stagger-2" />
 
-        <p
-          class="font-body text-cream-400 text-sm md:text-lg max-w-xl mx-auto mb-8 md:mb-12 animate-slide-up stagger-2 px-4 leading-relaxed">
-          La cérémonie qui célèbre l'excellence et la passion de la danse.
-        </p>
+          <p
+            class="font-body text-cream-400 text-base sm:text-sm md:text-base max-w-xl mx-auto mb-0 md:mb-4 animate-slide-up stagger-2 px-4 leading-relaxed">
+            La cérémonie qui célèbre l'excellence et la passion de la danse.
+          </p>
+        </div>
 
-        <!-- Elegant countdown -->
-        <div class="mb-8 md:mb-12 animate-slide-up stagger-3">
-          <p class="text-cream-500 text-xs tracking-widest uppercase mb-4 font-title">Jusqu'à la cérémonie</p>
-          <p class="text-gold text-sm tracking-widest uppercase mb-4 font-title">18 Octobre 2026</p>
-          <div class="flex justify-center gap-4 md:gap-8">
-            <div class="text-center min-w-[3rem] md:min-w-[4rem]">
-              <span class="block font-title font-light text-2xl md:text-4xl text-cream-100 tabular-nums">{{
+        <!-- Middle section: Countdown -->
+        <div class="py-4 md:py-4 md:mb-4 animate-slide-up stagger-3">
+          <p class="text-cream-500 text-xs tracking-widest uppercase mb-3 font-title">Jusqu'à la cérémonie</p>
+          <p class="text-gold text-sm tracking-widest uppercase mb-4 font-title">17 Octobre 2026</p>
+          <div class="flex justify-center gap-3 md:gap-5">
+            <div
+              class="text-center min-w-[3.5rem] md:min-w-[4.5rem] px-2 py-3 border border-cream-400/10 bg-burgundy-950/50 backdrop-blur-sm">
+              <span class="block font-title font-light text-xl md:text-3xl text-cream-100 tabular-nums">{{
                 countdown.days }}</span>
-              <span class="text-cream-500 text-[10px] md:text-xs tracking-widest uppercase font-title">Jours</span>
+              <span class="text-gold/70 text-[9px] md:text-[11px] tracking-widest uppercase font-title">Jours</span>
             </div>
-            <span class="text-gold/30 text-2xl md:text-4xl font-light">:</span>
-            <div class="text-center min-w-[3rem] md:min-w-[4rem]">
-              <span class="block font-title font-light text-2xl md:text-4xl text-cream-100 tabular-nums">{{
+            <span class="text-gold/40 text-xl md:text-3xl font-light self-center">:</span>
+            <div
+              class="text-center min-w-[3.5rem] md:min-w-[4.5rem] px-2 py-3 border border-cream-400/10 bg-burgundy-950/50 backdrop-blur-sm">
+              <span class="block font-title font-light text-xl md:text-3xl text-cream-100 tabular-nums">{{
                 countdown.hours }}</span>
-              <span class="text-cream-500 text-[10px] md:text-xs tracking-widest uppercase font-title">Heures</span>
+              <span class="text-gold/70 text-[9px] md:text-[11px] tracking-widest uppercase font-title">Heures</span>
             </div>
-            <span class="text-gold/30 text-2xl md:text-4xl font-light">:</span>
-            <div class="text-center min-w-[3rem] md:min-w-[4rem]">
-              <span class="block font-title font-light text-2xl md:text-4xl text-cream-100 tabular-nums">{{
+            <span class="text-gold/40 text-xl md:text-3xl font-light self-center">:</span>
+            <div
+              class="text-center min-w-[3.5rem] md:min-w-[4.5rem] px-2 py-3 border border-cream-400/10 bg-burgundy-950/50 backdrop-blur-sm">
+              <span class="block font-title font-light text-xl md:text-3xl text-cream-100 tabular-nums">{{
                 countdown.minutes }}</span>
-              <span class="text-cream-500 text-[10px] md:text-xs tracking-widest uppercase font-title">Min</span>
+              <span class="text-gold/70 text-[9px] md:text-[11px] tracking-widest uppercase font-title">Min</span>
             </div>
-            <span class="text-gold/30 text-2xl md:text-4xl font-light hidden sm:block">:</span>
-            <div class="text-center min-w-[3rem] md:min-w-[4rem] hidden sm:block">
-              <span class="block font-title font-light text-2xl md:text-4xl text-cream-100 tabular-nums">{{
+            <span class="text-gold/40 text-xl md:text-3xl font-light self-center hidden sm:block">:</span>
+            <div
+              class="text-center min-w-[3.5rem] md:min-w-[4.5rem] px-2 py-3 border border-cream-400/10 bg-burgundy-950/50 backdrop-blur-sm hidden sm:block">
+              <span class="block font-title font-light text-xl md:text-3xl text-cream-100 tabular-nums">{{
                 countdown.seconds }}</span>
-              <span class="text-cream-500 text-[10px] md:text-xs tracking-widest uppercase font-title">Sec</span>
+              <span class="text-gold/70 text-[9px] md:text-[11px] tracking-widest uppercase font-title">Sec</span>
             </div>
           </div>
         </div>
 
-        <!-- CTA -->
-        <div class="animate-slide-up stagger-4">
-          <NuxtLink to="#categories" class="btn btn-gold text-sm md:text-base px-8 md:px-12 py-3 md:py-4">
+        <!-- Bottom section: CTA -->
+        <div class="pb-4 md:pb-0 animate-slide-up stagger-4">
+          <NuxtLink to="#categories" class="btn btn-gold text-xs md:text-sm px-6 md:px-10 py-2.5 md:py-3">
             Voter maintenant
           </NuxtLink>
         </div>
@@ -131,51 +152,87 @@ const howToVoteSteps = [
     </section>
 
     <!-- Categories Section -->
-    <section id="categories" class="py-16 md:py-28 bg-burgundy-950 relative">
-      <div class="container mx-auto px-4">
+    <section id="categories" class="py-16 md:py-28 bg-burgundy-950 relative overflow-hidden">
+      <!-- Background accents -->
+      <div class="absolute inset-0 bg-luxury-radial pointer-events-none" />
+      <div class="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-gold/20 to-transparent" />
+
+      <div class="container mx-auto px-4 relative z-10">
         <div class="text-center mb-12 md:mb-20">
-          <span class="text-gold text-xs tracking-[0.3em] uppercase font-title mb-4 block">Sélection 2026</span>
-          <h2 class="text-4xl md:text-6xl lg:text-7xl font-script text-cream-100 mb-4">
+          <!-- Decorative element -->
+          <div class="flex items-center justify-center gap-3 mb-6">
+            <div class="w-8 h-px bg-gold/30" />
+            <span class="text-gold text-xs tracking-[0.3em] uppercase font-title">Sélection 2026</span>
+            <div class="w-8 h-px bg-gold/30" />
+          </div>
+          <h2 class="text-4xl md:text-6xl lg:text-7xl font-script text-cream-100 mb-6 mt-8 text-glow-gold">
             Les Catégories
           </h2>
-          <div class="gold-divider" />
+          <div class="gold-divider-wide" />
         </div>
 
         <div class="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 md:gap-6">
           <CategoryCard v-for="category in (categories ?? [])" :key="category.id" :category="category" />
         </div>
       </div>
+
+      <div
+        class="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-cream-400/10 to-transparent" />
     </section>
 
     <!-- How to Vote Section -->
-    <section id="how-to-vote" class="py-16 md:py-28 bg-burgundy relative">
-      <!-- Subtle top border -->
+    <section id="how-to-vote" class="py-16 md:py-28 bg-burgundy relative overflow-hidden">
+      <!-- Background gradient -->
       <div
-        class="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-cream-400/10 to-transparent" />
+        class="absolute inset-0 bg-gradient-to-b from-burgundy-950/50 via-burgundy to-burgundy pointer-events-none" />
 
-      <div class="container mx-auto px-4">
+      <!-- Subtle top border -->
+      <div class="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-gold/30 to-transparent" />
+
+      <div class="container mx-auto px-4 relative z-10">
         <div class="text-center mb-12 md:mb-20">
-          <span class="text-gold text-xs tracking-[0.3em] uppercase font-title mb-4 block">Processus</span>
-          <h2 class="text-4xl md:text-6xl font-script text-cream-100 mb-4">
+          <!-- Decorative element -->
+          <div class="flex items-center justify-center gap-3 mb-6">
+            <div class="w-8 h-px bg-gold/30" />
+            <span class="text-gold text-xs tracking-[0.3em] uppercase font-title">Processus</span>
+            <div class="w-8 h-px bg-gold/30" />
+          </div>
+          <h2 class="text-4xl md:text-6xl font-script text-cream-100 mb-6 mt-8 text-glow-gold">
             Comment Voter
           </h2>
-          <div class="gold-divider mb-4" />
-          <p class="text-sm md:text-base text-cream-500 font-body">
-            3 étapes simples • 1 vote par catégorie
+          <div class="gold-divider-wide mb-6" />
+          <p class="text-sm md:text-base text-cream-400 font-body">
+            Votez dans autant de catégories que vous le souhaitez • 1 seul vote par catégorie
           </p>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12 max-w-4xl mx-auto">
-          <div v-for="step in howToVoteSteps" :key="step.title" class="text-center group">
-            <div class="mb-6">
+          <div v-for="(step, index) in howToVoteSteps" :key="step.title" class="text-center group relative">
+            <!-- Step number -->
+            <div class="absolute -top-2 left-1/2 -translate-x-1/2 w-6 h-6 flex items-center justify-center">
+              <span class="text-gold/40 text-xs font-title">0{{ index + 1 }}</span>
+            </div>
+
+            <div class="mb-6 pt-4">
               <div
-                class="w-16 h-16 md:w-20 md:h-20 border border-cream-400/20 flex items-center justify-center mx-auto group-hover:border-gold/50 transition-colors duration-500">
+                class="w-16 h-16 md:w-20 md:h-20 border border-cream-400/20 flex items-center justify-center mx-auto group-hover:border-gold/50 group-hover:bg-gold/5 transition-all duration-500 relative">
+                <!-- Corner accents on hover -->
+                <div
+                  class="absolute -top-px -left-px w-3 h-3 border-t border-l border-transparent group-hover:border-gold/50 transition-colors duration-500" />
+                <div
+                  class="absolute -top-px -right-px w-3 h-3 border-t border-r border-transparent group-hover:border-gold/50 transition-colors duration-500" />
+                <div
+                  class="absolute -bottom-px -left-px w-3 h-3 border-b border-l border-transparent group-hover:border-gold/50 transition-colors duration-500" />
+                <div
+                  class="absolute -bottom-px -right-px w-3 h-3 border-b border-r border-transparent group-hover:border-gold/50 transition-colors duration-500" />
+
                 <svg class="w-7 h-7 md:w-8 md:h-8 text-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" :d="step.icon" />
                 </svg>
               </div>
             </div>
-            <h3 class="font-title font-light text-lg md:text-xl text-cream-100 mb-3 tracking-wide">
+            <h3
+              class="font-title font-light text-lg md:text-xl text-cream-100 mb-3 tracking-wide group-hover:text-gold transition-colors duration-500">
               {{ step.title }}
             </h3>
             <p class="font-body text-cream-500 text-sm leading-relaxed">
@@ -186,8 +243,7 @@ const howToVoteSteps = [
       </div>
 
       <!-- Subtle bottom border -->
-      <div
-        class="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-cream-400/10 to-transparent" />
+      <div class="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-gold/20 to-transparent" />
     </section>
   </div>
 </template>
