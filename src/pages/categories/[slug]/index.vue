@@ -24,6 +24,7 @@ const shuffledNominees = computed<Nominee[]>(() => {
   const nominees = category.value?.nominees ?? []
   return shuffleArray(nominees as Nominee[]).map(n => ({ ...n, category_id: category.value!.id }))
 })
+})
 
 useSeoMeta({
   title: () => category.value ? `${category.value.name} - Evad Ceremony 2026` : 'Chargement...',
@@ -95,7 +96,8 @@ const isLoading = computed(() => pending.value && !category.value)
               {{ category.name }}
             </h1>
             <!-- Desktop only: description and badges -->
-            <p class="hidden md:block font-body text-cream-500 text-base md:text-lg animate-fade-in stagger-1 leading-relaxed mt-4">
+            <p
+              class="hidden md:block font-body text-cream-500 text-base md:text-lg animate-fade-in stagger-1 leading-relaxed mt-4">
               {{ category.description }}
             </p>
             <div class="hidden md:flex flex-wrap items-center gap-3 mt-6 animate-fade-in stagger-2">
@@ -124,7 +126,7 @@ const isLoading = computed(() => pending.value && !category.value)
           <div v-if="shuffledNominees.length === 0" class="text-center py-16 text-cream-500">
             Aucun nominé pour cette catégorie pour le moment.
           </div>
-          <div v-else class="flex flex-col gap-3 md:grid md:grid-cols-2 md:gap-6">
+          <div v-else class="flex flex-col gap-3 md:grid md:grid-cols-3 lg:grid-cols-4 md:gap-4">
             <NomineeCard v-for="(nominee, index) in shuffledNominees" :key="nominee.id" :nominee="nominee"
               :category-slug="slug" :class="[`stagger-${(index % 6) + 1}`]" @vote="openVoteModal" />
           </div>

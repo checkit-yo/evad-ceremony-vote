@@ -24,11 +24,9 @@ const imageUrl = computed(() => props.nominee.image_url || '/placeholder-nominee
     <div class="flex items-center gap-3 p-3">
       <!-- Image -->
       <NuxtLink :to="nomineeUrl" class="block relative w-14 h-14 flex-shrink-0 overflow-hidden">
-        <img :src="imageUrl" :alt="nominee.name"
-          class="w-full h-full object-cover"
-          loading="lazy">
+        <img :src="imageUrl" :alt="nominee.name" class="w-full h-full object-cover" loading="lazy">
       </NuxtLink>
-      
+
       <!-- Content -->
       <div class="flex-1 min-w-0">
         <NuxtLink :to="nomineeUrl" class="block">
@@ -37,7 +35,7 @@ const imageUrl = computed(() => props.nominee.image_url || '/placeholder-nominee
           </h3>
         </NuxtLink>
       </div>
-      
+
       <!-- Vote button -->
       <button type="button" class="btn btn-primary text-xs px-4 py-2 flex-shrink-0" @click.stop="handleVote">
         Voter
@@ -48,7 +46,7 @@ const imageUrl = computed(() => props.nominee.image_url || '/placeholder-nominee
   <!-- Desktop: Card style -->
   <div class="hidden md:block luxury-card overflow-hidden animate-fade-in border border-cream-300/20">
     <!-- Image -->
-    <NuxtLink :to="nomineeUrl" class="block relative aspect-square overflow-hidden group">
+    <NuxtLink :to="nomineeUrl" class="block relative aspect-[4/3] overflow-hidden group">
       <img :src="imageUrl" :alt="nominee.name"
         class="w-full h-full object-cover transition-all duration-700 group-hover:scale-105 group-hover:brightness-75"
         loading="lazy">
@@ -66,14 +64,14 @@ const imageUrl = computed(() => props.nominee.image_url || '/placeholder-nominee
     </NuxtLink>
 
     <!-- Content -->
-    <div class="p-5">
+    <div class="p-3 lg:p-4">
       <NuxtLink :to="nomineeUrl" class="block group/title">
         <h3
-          class="font-title font-light text-lg text-cream-100 mb-2 group-hover/title:text-gold transition-colors duration-500 tracking-wide">
+          class="font-title font-light text-base text-cream-100 mb-1 group-hover/title:text-gold transition-colors duration-500 tracking-wide">
           {{ nominee.name }}
         </h3>
       </NuxtLink>
-      <p class="font-body text-cream-500 text-sm leading-relaxed mb-5 line-clamp-3">
+      <p class="font-body text-cream-500 text-xs leading-relaxed mb-3 line-clamp-2">
         {{ nominee.description }}
       </p>
 

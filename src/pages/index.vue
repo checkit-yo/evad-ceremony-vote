@@ -55,7 +55,8 @@ const howToVoteSteps = [
 <template>
   <div class="grain">
     <!-- Hero Section -->
-    <section class="relative h-screen min-h-[600px] flex items-center justify-center bg-burgundy overflow-hidden hero-height">
+    <section
+      class="relative h-screen min-h-[600px] flex items-center justify-center bg-burgundy overflow-hidden hero-height">
       <!-- Enhanced gold gradient orbs -->
       <div class="absolute inset-0 overflow-hidden">
         <div
@@ -75,7 +76,8 @@ const howToVoteSteps = [
       <div
         class="hidden md:block absolute top-20 left-12 right-12 bottom-12 border border-cream-400/10 pointer-events-none" />
 
-      <div class="container mx-auto px-4 py-8 md:py-12 relative z-10 text-center h-full flex flex-col justify-center gap-[5vh] md:gap-0">
+      <div
+        class="container mx-auto px-4 py-8 md:py-12 relative z-10 text-center h-full flex flex-col justify-center gap-[5vh] md:gap-0">
         <!-- Top section: Title -->
         <div class="flex flex-col justify-center">
           <!-- Decorative top element -->
