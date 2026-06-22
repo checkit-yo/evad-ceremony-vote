@@ -24,7 +24,6 @@ const shuffledNominees = computed<Nominee[]>(() => {
   const nominees = category.value?.nominees ?? []
   return shuffleArray(nominees as Nominee[]).map(n => ({ ...n, category_id: category.value!.id }))
 })
-})
 
 useSeoMeta({
   title: () => category.value ? `${category.value.name} - Evad Ceremony 2026` : 'Chargement...',
