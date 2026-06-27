@@ -36,7 +36,7 @@ onMounted(() => {
 const howToVoteSteps = [
   {
     title: 'Choisissez',
-    description: 'Parcourez les 10 catégories et découvrez tous les nominés.',
+    description: 'Parcourez les 9 catégories et découvrez tous les nominés.',
     icon: 'M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10',
   },
   {
@@ -92,22 +92,23 @@ const howToVoteSteps = [
             EVAD
           </h1>
           <h2
-            class="font-script font-normal text-4xl sm:text-3xl md:text-4xl text-gold mb-6 md:mb-8 animate-slide-up stagger-1">
+            class="font-script font-normal text-4xl sm:text-3xl md:text-4xl text-gold mb-4 md:mb-6 animate-slide-up stagger-1">
             Ceremony
           </h2>
+
+          <p class="text-gold text-sm tracking-widest uppercase mb-4 md:mb-6 font-title animate-slide-up stagger-2">17
+            Octobre 2026</p>
 
           <div class="gold-divider mb-6 md:mb-8 animate-fade-in stagger-2" />
 
           <p
-            class="font-body text-cream-400 text-base sm:text-sm md:text-base max-w-xl mx-auto mb-0 md:mb-4 animate-slide-up stagger-2 px-4 leading-relaxed">
+            class="font-body text-cream-400 text-base sm:text-sm md:text-base max-w-xl mx-auto mb-0 md:mb-4 animate-slide-up stagger-3 px-4 leading-relaxed">
             La cérémonie qui célèbre l'excellence et la passion de la danse.
           </p>
         </div>
 
         <!-- Middle section: Countdown -->
-        <div class="py-4 md:py-4 md:mb-4 animate-slide-up stagger-3">
-          <p class="text-cream-500 text-xs tracking-widest uppercase mb-3 font-title">Jusqu'à la cérémonie</p>
-          <p class="text-gold text-sm tracking-widest uppercase mb-4 font-title">17 Octobre 2026</p>
+        <div class="py-4 md:py-4 md:mb-4 animate-slide-up stagger-4">
           <div class="flex justify-center gap-3 md:gap-5">
             <div
               class="text-center min-w-[3.5rem] md:min-w-[4.5rem] px-2 py-3 border border-cream-400/10 bg-burgundy-950/50 backdrop-blur-sm">
@@ -140,7 +141,7 @@ const howToVoteSteps = [
         </div>
 
         <!-- Bottom section: CTA -->
-        <div class="pb-4 md:pb-0 animate-slide-up stagger-4">
+        <div class="pb-4 md:pb-0 animate-slide-up stagger-5">
           <NuxtLink to="#categories" class="btn btn-gold text-xs md:text-sm px-6 md:px-10 py-2.5 md:py-3">
             Voter maintenant
           </NuxtLink>
@@ -173,7 +174,7 @@ const howToVoteSteps = [
           <div class="gold-divider-wide" />
         </div>
 
-        <div class="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 md:gap-6">
+        <div class="grid grid-cols-2 lg:grid-cols-3 gap-3 md:gap-6">
           <CategoryCard v-for="category in (categories ?? [])" :key="category.id" :category="category" />
         </div>
       </div>
@@ -246,6 +247,51 @@ const howToVoteSteps = [
 
       <!-- Subtle bottom border -->
       <div class="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-gold/20 to-transparent" />
+    </section>
+
+    <!-- Ticketing Section -->
+    <section id="billetterie" class="py-16 md:py-28 bg-burgundy-950 relative overflow-hidden">
+      <!-- Background accents -->
+      <div class="absolute inset-0 bg-luxury-radial pointer-events-none" />
+      <div class="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-gold/30 to-transparent" />
+
+      <div class="container mx-auto px-4 relative z-10">
+        <div class="max-w-3xl mx-auto text-center">
+          <!-- Decorative element -->
+          <div class="flex items-center justify-center gap-3 mb-6">
+            <div class="w-8 h-px bg-gold/30" />
+            <span class="text-gold text-xs tracking-[0.3em] uppercase font-title">17 Octobre 2026</span>
+            <div class="w-8 h-px bg-gold/30" />
+          </div>
+
+          <h2 class="text-4xl md:text-6xl font-script text-cream-100 mb-6 mt-8 text-glow-gold">
+            Rejoignez-nous
+          </h2>
+          <div class="gold-divider-wide mb-8" />
+
+          <p class="font-body text-cream-400 text-base md:text-lg mb-10 leading-relaxed px-4">
+            Vivez une soirée exceptionnelle célébrant l'excellence de la danse.
+            Réservez dès maintenant votre place pour la cérémonie EVAD 2026.
+          </p>
+
+          <a href="https://www.helloasso.com/associations/evad-creation/evenements/evad-ceremony" target="_blank"
+            rel="noopener noreferrer"
+            class="btn btn-gold text-sm md:text-base px-8 md:px-12 py-3 md:py-4 inline-flex items-center gap-3">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                d="M15 5v2m0 4v2m0 4v2M5 5a2 2 0 00-2 2v3a2 2 0 110 4v3a2 2 0 002 2h14a2 2 0 002-2v-3a2 2 0 110-4V7a2 2 0 00-2-2H5z" />
+            </svg>
+            Réserver mes billets
+          </a>
+
+          <p class="mt-8 text-cream-600 text-sm font-body">
+            Paris • Places limitées
+          </p>
+        </div>
+      </div>
+
+      <div
+        class="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-cream-400/10 to-transparent" />
     </section>
   </div>
 </template>

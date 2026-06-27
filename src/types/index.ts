@@ -3,6 +3,7 @@ export interface Category {
   slug: string
   name: string
   description: string
+  youtube_url: string | null
   display_order: number
   nominee_count?: number
   created_at?: string

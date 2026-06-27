@@ -6,6 +6,7 @@ export default defineEventHandler(async (event) => {
     slug?: string
     name?: string
     description?: string
+    youtube_url?: string
     display_order?: number
   }>(event)
 
@@ -25,9 +26,10 @@ export default defineEventHandler(async (event) => {
       slug,
       name: body.name,
       description: body.description ?? '',
+      youtube_url: body.youtube_url ?? null,
       display_order: body.display_order ?? 0,
     })
-    .select('id, slug, name, description, display_order')
+    .select('id, slug, name, description, youtube_url, display_order')
     .single()
 
   if (error) {
