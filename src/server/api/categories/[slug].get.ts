@@ -9,7 +9,7 @@ export default defineEventHandler(async (event) => {
   const supabase = useSupabaseAdmin()
   const { data: category, error: catError } = await supabase
     .from('categories')
-    .select('id, slug, name, description, display_order')
+    .select('id, slug, name, description, youtube_url, display_order')
     .eq('slug', slug)
     .maybeSingle()
 

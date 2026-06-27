@@ -21,17 +21,29 @@ const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, {
   auth: { persistSession: false },
 })
 
+// Sample dance-related YouTube videos for categories
+const YOUTUBE_URLS = [
+  'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
+  'https://www.youtube.com/watch?v=JGwWNGJdvx8',
+  'https://www.youtube.com/watch?v=kJQP7kiw5Fk',
+  'https://www.youtube.com/watch?v=RgKAFK5djSk',
+  'https://www.youtube.com/watch?v=OPf0YbXqDm0',
+  'https://www.youtube.com/watch?v=fRh_vgS2dFE',
+  'https://www.youtube.com/watch?v=09R8_2nJtjg',
+  'https://www.youtube.com/watch?v=YQHsXMglC9A',
+  'https://www.youtube.com/watch?v=hT_nvWreIhg',
+]
+
 const CATEGORIES = [
-  { slug: 'best-dancer', name: 'Meilleur Danseur', description: 'Récompense le danseur qui a marqué l\'année par sa technique, son charisme et son influence sur la scène.', count: 16 },
-  { slug: 'best-female-dancer', name: 'Meilleure Danseuse', description: 'Célèbre la danseuse qui s\'est distinguée par son talent exceptionnel et sa présence artistique.', count: 16 },
-  { slug: 'best-freestyler', name: 'Meilleur Freestyler', description: 'Honore l\'artiste dont l\'improvisation et la créativité ont captivé le public cette année.', count: 12 },
-  { slug: 'best-choreographer', name: 'Meilleur Chorégraphe', description: 'Distingue le chorégraphe dont les créations ont inspiré et innové dans l\'art de la danse.', count: 10 },
-  { slug: 'best-crew', name: 'Meilleur Crew', description: 'Récompense le groupe qui a démontré une cohésion exceptionnelle et des performances mémorables.', count: 12 },
-  { slug: 'best-young-talent', name: 'Meilleur Espoir', description: 'Met en lumière la nouvelle génération de danseurs prometteurs qui façonnent l\'avenir de la danse.', count: 16 },
-  { slug: 'best-volunteer', name: 'Meilleur Bénévole', description: 'Rend hommage à ceux qui donnent de leur temps et énergie pour faire vivre notre communauté.', count: 10 },
-  { slug: 'best-event', name: 'Meilleur Événement', description: 'Célèbre l\'événement qui a marqué l\'année par son organisation, son ambiance et son impact.', count: 8 },
-  { slug: 'best-battle', name: 'Meilleur Battle', description: 'Distingue la compétition qui a offert les moments les plus intenses et mémorables.', count: 8 },
-  { slug: 'lifetime-achievement', name: 'Légende de la Danse', description: 'Honore une personnalité dont la carrière et l\'influence ont marqué durablement l\'histoire de la danse.', count: 6 },
+  { slug: 'best-dancer', name: 'Meilleur Danseur', description: 'Récompense le danseur qui a marqué l\'année par sa technique, son charisme et son influence sur la scène.', count: 16, youtube_url: YOUTUBE_URLS[0] },
+  { slug: 'best-female-dancer', name: 'Meilleure Danseuse', description: 'Célèbre la danseuse qui s\'est distinguée par son talent exceptionnel et sa présence artistique.', count: 16, youtube_url: YOUTUBE_URLS[1] },
+  { slug: 'best-freestyler', name: 'Meilleur Freestyler', description: 'Honore l\'artiste dont l\'improvisation et la créativité ont captivé le public cette année.', count: 12, youtube_url: YOUTUBE_URLS[2] },
+  { slug: 'best-choreographer', name: 'Meilleur Chorégraphe', description: 'Distingue le chorégraphe dont les créations ont inspiré et innové dans l\'art de la danse.', count: 10, youtube_url: YOUTUBE_URLS[3] },
+  { slug: 'best-crew', name: 'Meilleur Crew', description: 'Récompense le groupe qui a démontré une cohésion exceptionnelle et des performances mémorables.', count: 12, youtube_url: YOUTUBE_URLS[4] },
+  { slug: 'best-young-talent', name: 'Meilleur Espoir', description: 'Met en lumière la nouvelle génération de danseurs prometteurs qui façonnent l\'avenir de la danse.', count: 16, youtube_url: YOUTUBE_URLS[5] },
+  { slug: 'best-volunteer', name: 'Meilleur Bénévole', description: 'Rend hommage à ceux qui donnent de leur temps et énergie pour faire vivre notre communauté.', count: 10, youtube_url: YOUTUBE_URLS[6] },
+  { slug: 'best-event', name: 'Meilleur Événement', description: 'Célèbre l\'événement qui a marqué l\'année par son organisation, son ambiance et son impact.', count: 8, youtube_url: YOUTUBE_URLS[7] },
+  { slug: 'best-battle', name: 'Meilleur Battle', description: 'Distingue la compétition qui a offert les moments les plus intenses et mémorables.', count: 8, youtube_url: YOUTUBE_URLS[8] },
 ]
 
 const FIRST_NAMES = ['Alexandre', 'Marie', 'Lucas', 'Emma', 'Hugo', 'Léa', 'Nathan', 'Chloé', 'Gabriel', 'Manon', 'Louis', 'Camille', 'Raphaël', 'Jade', 'Arthur', 'Louise']
@@ -74,6 +86,7 @@ async function main() {
           slug: cat.slug,
           name: cat.name,
           description: cat.description,
+          youtube_url: cat.youtube_url,
           display_order: i,
         },
         { onConflict: 'slug' },

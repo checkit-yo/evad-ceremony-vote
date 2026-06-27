@@ -45,7 +45,7 @@ export async function sendOtpEmail(opts: {
   }
 }
 
-function renderOtpEmail({
+export function renderOtpEmail({
   code,
   categoryName,
   nomineeName,

@@ -39,7 +39,7 @@ function closeModal() {
   editing.value = null
 }
 
-async function onSubmit(payload: { name: string, description: string, display_order: number }) {
+async function onSubmit(payload: { name: string, description: string, youtube_url: string, display_order: number }) {
   submitting.value = true
   try {
     if (editing.value) {
@@ -73,8 +73,7 @@ async function onDelete(cat: Category) {
       <h2 class="text-xl font-semibold text-white">Catégories</h2>
       <button
         class="bg-gradient-to-r from-amber-500 to-amber-600 text-slate-900 font-semibold px-4 py-2 rounded-lg hover:from-amber-400 hover:to-amber-500 transition-all text-sm"
-        @click="openCreate"
-      >
+        @click="openCreate">
         + Ajouter
       </button>
     </div>
@@ -96,11 +95,7 @@ async function onDelete(cat: Category) {
           </tr>
         </thead>
         <tbody>
-          <tr
-            v-for="cat in categories"
-            :key="cat.id"
-            class="border-t border-slate-700/50 hover:bg-slate-700/20"
-          >
+          <tr v-for="cat in categories" :key="cat.id" class="border-t border-slate-700/50 hover:bg-slate-700/20">
             <td class="px-5 py-3 text-slate-400">{{ cat.display_order }}</td>
             <td class="px-5 py-3 text-white font-medium">{{ cat.name }}</td>
             <td class="px-5 py-3 text-slate-400 font-mono text-xs">{{ cat.slug }}</td>
@@ -119,11 +114,7 @@ async function onDelete(cat: Category) {
 
     <!-- Mobile: cards -->
     <div v-if="!isLoading || categories.length > 0" class="md:hidden space-y-3">
-      <div
-        v-for="cat in categories"
-        :key="cat.id"
-        class="bg-slate-800/50 border border-slate-700/50 rounded-xl p-4"
-      >
+      <div v-for="cat in categories" :key="cat.id" class="bg-slate-800/50 border border-slate-700/50 rounded-xl p-4">
         <div class="flex items-start justify-between gap-3 mb-2">
           <div class="min-w-0 flex-1">
             <p class="text-white font-medium truncate">{{ cat.name }}</p>
@@ -135,14 +126,12 @@ async function onDelete(cat: Category) {
         <div class="flex items-center gap-2 pt-2 border-t border-slate-700/50">
           <button
             class="flex-1 text-amber-400 hover:text-amber-300 text-xs font-medium py-2 border border-amber-400/30 rounded-lg"
-            @click="openEdit(cat)"
-          >
+            @click="openEdit(cat)">
             Éditer
           </button>
           <button
             class="flex-1 text-red-400 hover:text-red-300 text-xs font-medium py-2 border border-red-400/30 rounded-lg"
-            @click="onDelete(cat)"
-          >
+            @click="onDelete(cat)">
             Supprimer
           </button>
         </div>
@@ -152,17 +141,9 @@ async function onDelete(cat: Category) {
       </p>
     </div>
 
-    <AdminModal
-      :is-open="isModalOpen"
-      :title="editing ? 'Éditer la catégorie' : 'Nouvelle catégorie'"
-      @close="closeModal"
-    >
-      <AdminCategoryForm
-        :category="editing"
-        :submitting="submitting"
-        @submit="onSubmit"
-        @cancel="closeModal"
-      />
+    <AdminModal :is-open="isModalOpen" :title="editing ? 'Éditer la catégorie' : 'Nouvelle catégorie'"
+      @close="closeModal">
+      <AdminCategoryForm :category="editing" :submitting="submitting" @submit="onSubmit" @cancel="closeModal" />
     </AdminModal>
   </div>
 </template>

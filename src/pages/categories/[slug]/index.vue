@@ -46,12 +46,30 @@ function closeVoteModal() {
 function handleVoteSuccess() { }
 
 const isLoading = computed(() => pending.value && !category.value)
+
+// Extract YouTube video ID from URL
+const youtubeVideoId = computed(() => {
+  const url = category.value?.youtube_url
+  if (!url) return null
+
+  // Match various YouTube URL formats
+  const patterns = [
+    /(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([^&\n?#]+)/,
+    /youtube\.com\/shorts\/([^&\n?#]+)/,
+  ]
+
+  for (const pattern of patterns) {
+    const match = url.match(pattern)
+    if (match) return match[1]
+  }
+  return null
+})
 </script>
 
 <template>
   <div class="pt-20 grain">
     <!-- Header (sticky on mobile only) -->
-    <section class="bg-burgundy py-4 md:py-12 border-b border-cream-300/20 sticky top-16 z-20 md:static">
+    <section class="bg-burgundy py-4 md:py-12 border-b border-cream-300/20 sticky top-20 z-20 md:static">
       <div class="container mx-auto px-4">
         <!-- Breadcrumb (desktop only) -->
         <nav class="mb-8 hidden md:block">
@@ -114,6 +132,21 @@ const isLoading = computed(() => pending.value && !category.value)
             <div class="hidden md:block h-5 w-full bg-cream-400/5 animate-pulse mb-2" />
             <div class="hidden md:block h-5 w-4/5 bg-cream-400/5 animate-pulse" />
           </template>
+        </div>
+      </div>
+    </section>
+
+    <!-- YouTube Video Section -->
+    <section v-if="!isLoading && category && youtubeVideoId"
+      class="py-8 md:py-12 bg-burgundy-950 border-b border-cream-300/10">
+      <div class="container mx-auto px-4">
+        <div class="max-w-4xl mx-auto">
+          <div class="relative w-full aspect-video rounded-lg overflow-hidden border border-cream-400/10">
+            <iframe :src="`https://www.youtube.com/embed/${youtubeVideoId}?rel=0`" title="Vidéo de présentation"
+              class="absolute inset-0 w-full h-full" frameborder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowfullscreen />
+          </div>
         </div>
       </div>
     </section>

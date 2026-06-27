@@ -8,6 +8,7 @@ export default defineEventHandler(async (event) => {
     slug?: string
     name?: string
     description?: string
+    youtube_url?: string | null
     display_order?: number
   }>(event)
 
@@ -20,6 +21,7 @@ export default defineEventHandler(async (event) => {
   }
   if (body.name !== undefined) updates.name = body.name
   if (body.description !== undefined) updates.description = body.description
+  if (body.youtube_url !== undefined) updates.youtube_url = body.youtube_url
   if (body.display_order !== undefined) updates.display_order = body.display_order
 
   if (Object.keys(updates).length === 0) {
@@ -31,7 +33,7 @@ export default defineEventHandler(async (event) => {
     .from('categories')
     .update(updates)
     .eq('id', id)
-    .select('id, slug, name, description, display_order')
+    .select('id, slug, name, description, youtube_url, display_order')
     .single()
 
   if (error) {
