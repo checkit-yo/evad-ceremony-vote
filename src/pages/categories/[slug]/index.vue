@@ -11,19 +11,44 @@ if (error.value) {
   throw createError({ statusCode: 404, statusMessage: 'Catégorie non trouvée' })
 }
 
+// Shuffle array randomly (Fisher-Yates algorithm)
 function shuffleArray<T>(array: T[]): T[] {
   const shuffled = [...array]
   for (let i = shuffled.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1))
-      ;[shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]]
+    ;[shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]]
   }
   return shuffled
 }
 
-const shuffledNominees = computed<Nominee[]>(() => {
-  const nominees = category.value?.nominees ?? []
-  return shuffleArray(nominees as Nominee[]).map(n => ({ ...n, category_id: category.value!.id }))
+// Store shuffled nominees - only shuffle on client to avoid SSR/hydration mismatch
+const shuffledNominees = ref<Nominee[]>([])
+const isShuffled = ref(false)
+
+// Shuffle only on client-side after mount to avoid hydration mismatch
+onMounted(() => {
+  if (category.value?.nominees && category.value.nominees.length > 0) {
+    shuffledNominees.value = shuffleArray(category.value.nominees as Nominee[]).map(n => ({
+      ...n,
+      category_id: category.value!.id,
+    }))
+    isShuffled.value = true
+  }
 })
+
+// Also watch for category changes (e.g., navigating between categories)
+watch(
+  () => category.value?.id,
+  (newId, oldId) => {
+    if (newId && newId !== oldId && category.value?.nominees) {
+      shuffledNominees.value = shuffleArray(category.value.nominees as Nominee[]).map(n => ({
+        ...n,
+        category_id: category.value!.id,
+      }))
+      isShuffled.value = true
+    }
+  },
+)
 
 useSeoMeta({
   title: () => category.value ? `${category.value.name} - Evad Ceremony 2026` : 'Chargement...',
@@ -141,6 +166,16 @@ const youtubeVideoId = computed(() => {
       class="py-8 md:py-12 bg-burgundy-950 border-b border-cream-300/10">
       <div class="container mx-auto px-4">
         <div class="max-w-4xl mx-auto">
+          <!-- Video Title -->
+          <div class="text-center mb-6">
+            <h2 class="font-title text-xl md:text-2xl text-cream-100 mb-2">
+              Découvrez les nominés
+            </h2>
+            <p class="font-body text-cream-500 text-sm md:text-base">
+              Quelques secondes de chaque nominé en action
+            </p>
+          </div>
+          
           <div class="relative w-full aspect-video rounded-lg overflow-hidden border border-cream-400/10">
             <iframe :src="`https://www.youtube.com/embed/${youtubeVideoId}?rel=0`" title="Vidéo de présentation"
               class="absolute inset-0 w-full h-full" frameborder="0"
@@ -154,7 +189,7 @@ const youtubeVideoId = computed(() => {
     <!-- Nominees Grid -->
     <section class="py-12 md:py-20 bg-burgundy-950">
       <div class="container mx-auto px-4">
-        <template v-if="!isLoading && category">
+        <template v-if="!isLoading && category && isShuffled">
           <div v-if="shuffledNominees.length === 0" class="text-center py-16 text-cream-500">
             Aucun nominé pour cette catégorie pour le moment.
           </div>
