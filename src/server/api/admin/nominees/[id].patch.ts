@@ -33,7 +33,7 @@ export default defineEventHandler(async (event) => {
 
   if (error) {
     if (error.code === '23505') {
-      throw createError({ statusCode: 409, statusMessage: 'Un nominé avec ce nom existe déjà dans cette catégorie.' })
+      throw createError({ statusCode: 409, statusMessage: 'Un nommé avec ce nom existe déjà dans cette catégorie.' })
     }
     throw createError({ statusCode: 500, statusMessage: error.message })
   }

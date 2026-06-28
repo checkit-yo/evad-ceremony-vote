@@ -4,10 +4,10 @@ Plateforme de vote pour la cérémonie EVAD 2026, construite avec Nuxt 3, Supaba
 
 ## Fonctionnalités
 
-- 10 catégories de prix avec jusqu'à 16 nominés chacune
+- 10 catégories de prix avec jusqu'à 16 nommés chacune
 - Vote sécurisé par OTP email (Resend)
 - Persistence Supabase (Postgres + Storage pour les images)
-- Admin panel : résultats temps réel + CRUD catégories/nominés (avec upload image)
+- Admin panel : résultats temps réel + CRUD catégories/nommés (avec upload image)
 - 1 vote par couple (email, catégorie) garanti au niveau DB
 - Anti-fraude : rate limit, hash OTP, max 5 tentatives
 
@@ -61,13 +61,13 @@ supabase/migrations/20260603120000_init_schema.sql
 Puis créer le bucket Storage `nominee-images` (public) :
 - Supabase Studio → Storage → New bucket → name `nominee-images` → cocher "Public bucket"
 
-### 4. Seed initial des catégories et nominés
+### 4. Seed initial des catégories et nommés
 
 ```bash
 pnpm seed
 ```
 
-Cela peuple les 10 catégories et leurs nominés depuis les valeurs initiales. Idempotent (upsert).
+Cela peuple les 10 catégories et leurs nommés depuis les valeurs initiales. Idempotent (upsert).
 
 ### 5. Lancer
 
@@ -84,7 +84,7 @@ Le site est disponible sur http://localhost:3000.
 Trois onglets :
 - **Résultats** : statistiques et classement par catégorie
 - **Catégories** : CRUD (créer, éditer, supprimer en cascade)
-- **Nominés** : CRUD avec upload d'image vers Supabase Storage
+- **Nommés** : CRUD avec upload d'image vers Supabase Storage
 
 ## Architecture
 

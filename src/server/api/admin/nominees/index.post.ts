@@ -28,7 +28,7 @@ export default defineEventHandler(async (event) => {
 
   if (error) {
     if (error.code === '23505') {
-      throw createError({ statusCode: 409, statusMessage: 'Un nominé avec ce nom existe déjà dans cette catégorie.' })
+      throw createError({ statusCode: 409, statusMessage: 'Un nommé avec ce nom existe déjà dans cette catégorie.' })
     }
     if (error.code === '23503') {
       throw createError({ statusCode: 404, statusMessage: 'Catégorie introuvable.' })

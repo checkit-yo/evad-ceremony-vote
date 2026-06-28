@@ -57,7 +57,7 @@ async function onSubmit(payload: { name: string, description: string, youtube_ur
 }
 
 async function onDelete(cat: Category) {
-  if (!confirm(`Supprimer la catégorie "${cat.name}" ? Tous ses nominés et votes associés seront aussi supprimés.`)) return
+  if (!confirm(`Supprimer la catégorie "${cat.name}" ? Tous ses nommés et votes associés seront aussi supprimés.`)) return
   try {
     await adminFetch(`/api/admin/categories/${cat.id}`, { method: 'DELETE' })
     await refresh()

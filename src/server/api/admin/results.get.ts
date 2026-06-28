@@ -3,7 +3,7 @@ import { useSupabaseAdmin } from '~/server/utils/supabase'
 export default defineEventHandler(async () => {
   const supabase = useSupabaseAdmin()
 
-  // 1) Compteurs par (catégorie, nominé) via RPC
+  // 1) Compteurs par (catégorie, nommé) via RPC
   const { data: counts, error: countsErr } = await supabase.rpc('get_vote_counts')
   if (countsErr) {
     throw createError({ statusCode: 500, statusMessage: `Erreur DB (counts) : ${countsErr.message}` })
@@ -14,7 +14,7 @@ export default defineEventHandler(async () => {
     countMap.get(row.category_id)!.set(row.nominee_id, Number(row.vote_count))
   }
 
-  // 2) Catégories + nominés
+  // 2) Catégories + nommés
   const { data: categories, error: catsErr } = await supabase
     .from('categories')
     .select('id, slug, name, description, display_order')

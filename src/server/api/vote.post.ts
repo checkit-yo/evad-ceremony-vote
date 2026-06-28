@@ -21,7 +21,7 @@ export default defineEventHandler(async (event) => {
   const email = normalizeEmail(rawEmail)
   const supabase = useSupabaseAdmin()
 
-  // 1) Vérifier que le nominé existe et appartient à la catégorie + récupérer noms pour l'email
+  // 1) Vérifier que le nommé existe et appartient à la catégorie + récupérer noms pour l'email
   const { data: nominee, error: nomineeError } = await supabase
     .from('nominees')
     .select('id, name, category_id, categories ( id, name )')
@@ -29,10 +29,10 @@ export default defineEventHandler(async (event) => {
     .eq('category_id', categoryId)
     .maybeSingle()
   if (nomineeError) {
-    throw createError({ statusCode: 500, statusMessage: `Erreur DB (lookup nominé) : ${nomineeError.message}` })
+    throw createError({ statusCode: 500, statusMessage: `Erreur DB (lookup nommé) : ${nomineeError.message}` })
   }
   if (!nominee) {
-    throw createError({ statusCode: 404, statusMessage: 'Nominé non trouvé pour cette catégorie.' })
+    throw createError({ statusCode: 404, statusMessage: 'Nommé non trouvé pour cette catégorie.' })
   }
   const categoryName = (nominee as any).categories?.name ?? ''
   const nomineeName = nominee.name

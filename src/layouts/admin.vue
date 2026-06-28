@@ -50,7 +50,7 @@ const route = useRoute()
 const tabs = [
   { name: 'Résultats', to: '/admin' },
   { name: 'Catégories', to: '/admin/categories' },
-  { name: 'Nominés', to: '/admin/nominees' },
+  { name: 'Nommés', to: '/admin/nominees' },
 ]
 </script>
 

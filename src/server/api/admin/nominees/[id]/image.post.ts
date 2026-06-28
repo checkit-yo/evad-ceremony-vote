@@ -17,14 +17,14 @@ export default defineEventHandler(async (event) => {
 
   const supabase = useSupabaseAdmin()
 
-  // Vérifier que le nominé existe avant d'uploader
+  // Vérifier que le nommé existe avant d'uploader
   const { data: nominee, error: lookupErr } = await supabase
     .from('nominees')
     .select('id')
     .eq('id', id)
     .maybeSingle()
   if (lookupErr) throw createError({ statusCode: 500, statusMessage: lookupErr.message })
-  if (!nominee) throw createError({ statusCode: 404, statusMessage: 'Nominé introuvable.' })
+  if (!nominee) throw createError({ statusCode: 404, statusMessage: 'Nommé introuvable.' })
 
   const publicUrl = await uploadNomineeImage({
     nomineeId: id,

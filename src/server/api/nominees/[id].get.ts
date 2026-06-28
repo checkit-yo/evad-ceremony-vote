@@ -17,7 +17,7 @@ export default defineEventHandler(async (event) => {
     throw createError({ statusCode: 500, statusMessage: `Erreur DB (nominee) : ${error.message}` })
   }
   if (!data) {
-    throw createError({ statusCode: 404, statusMessage: 'Nominé introuvable.' })
+    throw createError({ statusCode: 404, statusMessage: 'Nommé introuvable.' })
   }
 
   const { categories: category, ...nominee } = data as any
