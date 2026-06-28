@@ -34,7 +34,7 @@ const count = computed(() => props.category.nominee_count ?? 0)
 
       <div class="flex items-center justify-between mt-3 md:mt-4 pt-3 border-t border-cream-400/10">
         <span class="text-xs text-cream-400 font-body">
-          {{ count }} nominé{{ count > 1 ? 's' : '' }}
+          {{ count }} nommé{{ count > 1 ? 's' : '' }}
         </span>
         <span
           class="text-gold font-title text-xs tracking-widest uppercase group-hover:translate-x-1 transition-transform duration-500 flex items-center gap-1">

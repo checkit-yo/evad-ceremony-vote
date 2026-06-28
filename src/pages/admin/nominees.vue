@@ -3,7 +3,7 @@ import { adminFetch } from '~/composables/useAdmin'
 import type { Category, Nominee } from '~/types'
 
 definePageMeta({ layout: 'admin' })
-useSeoMeta({ title: 'Nominés - EVAD Admin', robots: 'noindex, nofollow' })
+useSeoMeta({ title: 'Nommés - EVAD Admin', robots: 'noindex, nofollow' })
 
 const categories = ref<Category[]>([])
 const nominees = ref<Nominee[]>([])
@@ -94,7 +94,7 @@ async function onDelete(n: Nominee) {
   <div>
     <div class="flex items-center justify-between mb-6 gap-4 flex-wrap">
       <div class="flex items-center gap-3">
-        <h2 class="text-xl font-semibold text-white">Nominés</h2>
+        <h2 class="text-xl font-semibold text-white">Nommés</h2>
         <select
           v-model="filterCategoryId"
           class="bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-white text-sm focus:border-amber-500 focus:outline-none"
@@ -152,7 +152,7 @@ async function onDelete(n: Nominee) {
             </td>
           </tr>
           <tr v-if="nominees.length === 0">
-            <td colspan="5" class="px-5 py-8 text-center text-slate-500">Aucun nominé.</td>
+            <td colspan="5" class="px-5 py-8 text-center text-slate-500">Aucun nommé.</td>
           </tr>
         </tbody>
       </table>
@@ -195,13 +195,13 @@ async function onDelete(n: Nominee) {
         </div>
       </div>
       <p v-if="nominees.length === 0" class="text-center py-8 text-slate-500 text-sm">
-        Aucun nominé.
+        Aucun nommé.
       </p>
     </div>
 
     <AdminModal
       :is-open="isModalOpen"
-      :title="editing ? 'Éditer le nominé' : 'Nouveau nominé'"
+      :title="editing ? 'Éditer le nommé' : 'Nouveau nommé'"
       @close="closeModal"
     >
       <AdminNomineeForm

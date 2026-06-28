@@ -16,7 +16,7 @@ function shuffleArray<T>(array: T[]): T[] {
   const shuffled = [...array]
   for (let i = shuffled.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1))
-    ;[shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]]
+      ;[shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]]
   }
   return shuffled
 }
@@ -145,7 +145,7 @@ const youtubeVideoId = computed(() => {
             <div class="hidden md:flex flex-wrap items-center gap-3 mt-6 animate-fade-in stagger-2">
               <span
                 class="inline-flex items-center gap-2 px-4 py-2 border border-cream-400/20 text-cream-400 font-body text-sm">
-                {{ category.nominees.length }} nominé{{ category.nominees.length > 1 ? 's' : '' }}
+                {{ category.nominees.length }} nommé{{ category.nominees.length > 1 ? 's' : '' }}
               </span>
               <span class="px-4 py-2 border border-gold/30 text-gold/80 font-body text-sm">
                 Un seul vote autorisé
@@ -169,13 +169,13 @@ const youtubeVideoId = computed(() => {
           <!-- Video Title -->
           <div class="text-center mb-6">
             <h2 class="font-title text-xl md:text-2xl text-cream-100 mb-2">
-              Découvrez les nominés
+              Découvrez les nommés
             </h2>
             <p class="font-body text-cream-500 text-sm md:text-base">
-              Quelques secondes de chaque nominé en action
+              Quelques secondes de chaque nommé en action
             </p>
           </div>
-          
+
           <div class="relative w-full aspect-video rounded-lg overflow-hidden border border-cream-400/10">
             <iframe :src="`https://www.youtube.com/embed/${youtubeVideoId}?rel=0`" title="Vidéo de présentation"
               class="absolute inset-0 w-full h-full" frameborder="0"
@@ -191,7 +191,7 @@ const youtubeVideoId = computed(() => {
       <div class="container mx-auto px-4">
         <template v-if="!isLoading && category && isShuffled">
           <div v-if="shuffledNominees.length === 0" class="text-center py-16 text-cream-500">
-            Aucun nominé pour cette catégorie pour le moment.
+            Aucun nommé pour cette catégorie pour le moment.
           </div>
           <div v-else class="flex flex-col gap-3 md:grid md:grid-cols-3 lg:grid-cols-4 md:gap-4">
             <NomineeCard v-for="(nominee, index) in shuffledNominees" :key="nominee.id" :nominee="nominee"
