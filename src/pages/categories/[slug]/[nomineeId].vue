@@ -116,7 +116,7 @@ const imageUrl = computed(() => nominee.value?.image_url || '/placeholder-nomine
               <div class="p-6 md:p-8">
                 <NuxtLink
                   :to="`/categories/${category.slug}`"
-                  class="inline-flex items-center gap-2 px-3 py-1 border border-gold/30 text-gold text-xs font-title tracking-wider mb-4 hover:bg-gold/10 transition-colors duration-500"
+                  class="inline-flex items-center gap-2 px-3 py-1 border border-gold/30 text-gold text-xs font-title tracking-wider mb-6 hover:bg-gold/10 transition-colors duration-500"
                 >
                   {{ category.name }}
                 </NuxtLink>
